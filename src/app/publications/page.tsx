@@ -16,7 +16,7 @@ interface Publication {
 
 const LANG_COLORS: Record<LanguageBadge, string> = {
   COP: "bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-400 border-amber-200 dark:border-amber-800",
-  NL:  "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-400 border-blue-200 dark:border-blue-800",
+  NL: "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-400 border-blue-200 dark:border-blue-800",
   ENG: "bg-sky-100 text-sky-700 dark:bg-sky-900/40 dark:text-sky-400 border-sky-200 dark:border-sky-800",
 };
 
@@ -29,7 +29,7 @@ const publications: Publication[] = [
     comingSoon: false,
   },
   {
-    title: "Inleiding tot het Bohairisch Koptisch: Basisgrammatica.",
+    title: "Inleiding tot het Bohairisch Koptisch: Basisgrammatica",
     subtitle: "Deel I (3 delen)",
     lang: "NL",
     comingSoon: true,

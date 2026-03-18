@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { antinoou } from '@/lib/fonts';
 import { LexicalEntry } from '../../scripts/parseExcel';
 import HighlightText from './HighlightText';
 
@@ -37,7 +38,7 @@ export default function DictionaryEntryCard({ entry, query = "", selectedDialect
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
         <div>
           <Link href={`/entry/${entry.id}`} prefetch={false} className="inline-block">
-            <h2 className="text-4xl text-sky-600 dark:text-sky-400 font-coptic tracking-wider drop-shadow-sm hover:text-sky-500 dark:hover:text-sky-300 transition-colors cursor-pointer">
+            <h2 className={`${antinoou.className} text-4xl text-sky-600 dark:text-sky-400 tracking-wider drop-shadow-sm hover:text-sky-500 dark:hover:text-sky-300 transition-colors cursor-pointer`}>
               <HighlightText text={headerSpelling} query={query} />
             </h2>
           </Link>
@@ -63,7 +64,7 @@ export default function DictionaryEntryCard({ entry, query = "", selectedDialect
         <ul className="space-y-1 text-stone-800 dark:text-stone-200 text-lg list-disc ml-5 marker:text-sky-500">
           {entry.english_meanings.map((meaning, idx) => (
             <li key={idx} className="leading-relaxed pl-1">
-              <HighlightText text={meaning} query={query} />
+              <HighlightText text={meaning} query={query} emphasizeLeadingLabel />
             </li>
           ))}
         </ul>
@@ -102,7 +103,7 @@ export default function DictionaryEntryCard({ entry, query = "", selectedDialect
               return (
               <div key={index} className="flex items-center space-x-2 bg-stone-50 dark:bg-stone-950/50 px-3 py-2 rounded-lg border border-stone-200 dark:border-stone-800/60">
                 <span className="text-[10px] bg-stone-200 dark:bg-stone-700 text-stone-700 dark:text-stone-200 px-1.5 rounded-sm font-bold uppercase">{dialect}</span>
-                <span className="font-coptic text-stone-800 dark:text-stone-300 text-lg">
+                <span className={`${antinoou.className} text-stone-800 dark:text-stone-300 text-lg`}>
                   <HighlightText text={spelling} query={query} />
                 </span>
               </div>

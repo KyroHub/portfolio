@@ -4,7 +4,6 @@
 
 @theme {
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  --font-coptic: var(--font-coptic), "Antinoou", sans-serif;
 }
 
 @layer base {
@@ -12,6 +11,12 @@
     background-color: #f5f5f4; /* light stone-100 */
     color: #1c1917; /* dark text */
     transition: background-color 0.3s ease;
+  }
+}
+
+@layer utilities {
+  .font-coptic {
+    font-family: var(--font-coptic, "Antinoou"), sans-serif;
   }
 }
 

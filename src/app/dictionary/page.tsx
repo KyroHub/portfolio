@@ -6,6 +6,7 @@ import { LexicalEntry } from "../../../scripts/parseExcel";
 import { searchDictionary } from "../../../lib/searchEngine";
 import CopticKeyboard from "@/components/CopticKeyboard";
 import { useLanguage } from "@/components/LanguageProvider";
+import { antinoou } from "@/lib/fonts";
 
 const PAGE_SIZE = 50;
 
@@ -153,7 +154,7 @@ export default function Home() {
               placeholder={t("dict.searchPlaceholder")} 
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              className="w-full bg-white/80 dark:bg-stone-900/80 backdrop-blur-xl border border-stone-200 dark:border-stone-700/80 text-stone-900 dark:text-stone-100 text-lg md:text-2xl rounded-2xl p-6 pl-16 pr-24 focus:outline-none focus:ring-2 focus:ring-sky-500/50 shadow-xl dark:shadow-2xl transition-all font-coptic placeholder:font-sans placeholder:text-stone-400 dark:placeholder:text-stone-500"
+              className={`${antinoou.className} w-full bg-white/80 dark:bg-stone-900/80 backdrop-blur-xl border border-stone-200 dark:border-stone-700/80 text-stone-900 dark:text-stone-100 text-lg md:text-2xl rounded-2xl p-6 pl-16 pr-24 focus:outline-none focus:ring-2 focus:ring-sky-500/50 shadow-xl dark:shadow-2xl transition-all placeholder:font-sans placeholder:text-stone-400 dark:placeholder:text-stone-500`}
             />
             
             <div className="absolute inset-y-0 right-4 flex items-center gap-2">

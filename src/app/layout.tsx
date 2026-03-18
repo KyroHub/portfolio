@@ -1,30 +1,7 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import localFont from "next/font/local";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
-
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
-});
-
-const antinoou = localFont({
-  src: [
-    {
-      path: "../fonts/AntinoouFont-1.0.6/Antinoou.ttf",
-      weight: "400",
-      style: "normal",
-    },
-    {
-      path: "../fonts/AntinoouFont-1.0.6/AntinoouItalic.ttf",
-      weight: "400",
-      style: "italic",
-    },
-  ],
-  variable: "--font-coptic",
-  display: "swap",
-});
+import { antinoou, inter } from "@/lib/fonts";
 
 import { LanguageProvider } from "@/components/LanguageProvider";
 import { Navbar } from "@/components/Navbar";
