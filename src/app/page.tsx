@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
 export default function GlobalLandingPage() {
@@ -16,12 +17,21 @@ export default function GlobalLandingPage() {
 
       <div className="max-w-4xl w-full text-center space-y-12 z-10">
         
-        {/* Title */}
-        <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-1000">
-          <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight bg-gradient-to-tr from-stone-800 to-stone-500 dark:from-stone-100 dark:to-stone-400 bg-clip-text text-transparent drop-shadow-sm">
+        {/* Title and Logo */}
+        <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-1000 flex flex-col items-center">
+          <div className="relative w-48 h-48 md:w-64 md:h-64 mb-2 hover:scale-105 transition-transform duration-500">
+            <Image 
+              src="/logo/logo-colored.svg" 
+              alt="Wannes Portfolio Logo" 
+              fill 
+              className="object-contain drop-shadow-2xl dark:drop-shadow-[0_20px_20px_rgba(255,255,255,0.05)]" 
+              priority
+            />
+          </div>
+          <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight bg-gradient-to-tr from-stone-800 to-stone-500 dark:from-stone-100 dark:to-stone-400 bg-clip-text text-transparent drop-shadow-sm font-antinoou z-10">
             Wannes Portfolio
           </h1>
-          <p className="text-lg md:text-2xl text-stone-500 dark:text-stone-400 font-medium">
+          <p className="text-lg md:text-2xl text-stone-500 dark:text-stone-400 font-medium max-w-2xl mx-auto z-10">
             Explore my publications and interactive scholarly applications.
           </p>
         </div>
