@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 
 /**
  * Normalizes query string and builds a regex that matches characters
@@ -25,27 +25,45 @@ function buildRegexFromQuery(query: string) {
   return new RegExp(`(${pattern})`, 'gi');
 }
 
+function renderWithSuperscript(text: string): ReactNode {
+  if (!text.includes('†')) return text;
+  
+  const parts = text.split('†');
+  const result: ReactNode[] = [];
+  
+  parts.forEach((part, i) => {
+    result.push(part);
+    if (i < parts.length - 1) {
+      result.push(<sup key={`dagger-${i}`} className="opacity-75">†</sup>);
+    }
+  });
+  
+  return <>{result}</>;
+}
+
 export default function HighlightText({ text, query, className = "" }: { text: string, query: string, className?: string }) {
+  const safeText = text.replace(/<[^>]+>/g, '');
+
   if (!query) {
-    return <span className={className}>{text}</span>;
+    return <span className={className}>{renderWithSuperscript(safeText)}</span>;
   }
 
   const regex = buildRegexFromQuery(query);
   if (!regex) {
-    return <span className={className}>{text}</span>;
+    return <span className={className}>{renderWithSuperscript(safeText)}</span>;
   }
 
-  const parts = text.split(regex);
+  const parts = safeText.split(regex);
 
   return (
     <span className={className}>
       {parts.map((part, i) =>
         regex.test(part) ? (
           <mark key={i} className="bg-sky-200 dark:bg-sky-500/40 text-sky-900 dark:text-sky-100 rounded-[2px] px-[1px] font-bold">
-            {part}
+            {renderWithSuperscript(part)}
           </mark>
         ) : (
-          <span key={i}>{part}</span>
+          <span key={i}>{renderWithSuperscript(part)}</span>
         )
       )}
     </span>

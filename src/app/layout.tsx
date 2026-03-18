@@ -26,6 +26,10 @@ const antinoou = localFont({
   display: "swap",
 });
 
+import { LanguageProvider } from "@/components/LanguageProvider";
+import { Navbar } from "@/components/Navbar";
+import { Footer } from "@/components/Footer";
+
 export const metadata: Metadata = {
   title: "Coptic Dictionary",
   description: "Advanced digital Coptic-English dictionary and lexicon analyzer.",
@@ -42,7 +46,15 @@ export default function RootLayout({
         className={`${inter.variable} ${antinoou.variable} font-sans antialiased`}
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          {children}
+          <LanguageProvider>
+            <div className="flex flex-col min-h-screen">
+              <Navbar />
+              <main className="flex-1">
+                {children}
+              </main>
+              <Footer />
+            </div>
+          </LanguageProvider>
         </ThemeProvider>
       </body>
     </html>

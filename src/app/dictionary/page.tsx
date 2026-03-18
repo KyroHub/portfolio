@@ -5,11 +5,12 @@ import DictionaryEntryCard from "@/components/DictionaryEntry";
 import { LexicalEntry } from "../../../scripts/parseExcel";
 import { searchDictionary } from "../../../lib/searchEngine";
 import CopticKeyboard from "@/components/CopticKeyboard";
-import { ThemeToggle } from "@/components/ThemeToggle";
+import { useLanguage } from "@/components/LanguageProvider";
 
 const PAGE_SIZE = 50;
 
 export default function Home() {
+  const { t, language } = useLanguage();
   const [dictionary, setDictionary] = useState<LexicalEntry[]>([]);
   const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(true);
@@ -23,21 +24,30 @@ export default function Home() {
 
   // Filters State
   const [selectedPOS, setSelectedPOS] = useState<string>("ALL");
-  const [selectedDialect, setSelectedDialect] = useState<string>("ALL");
+  const [selectedDialect, setSelectedDialect] = useState<string>("B");
 
   useEffect(() => {
-    // Fetch the JSON payload
-    fetch('/data/dictionary.json')
-      .then(res => res.json())
+    setLoading(true);
+    // Fetch the specific language payload, fallback to english if missing
+    fetch(language === "nl" ? '/data/woordenboek.json' : '/data/dictionary.json')
+      .then(res => {
+        if (!res.ok) throw new Error("JSON not found");
+        return res.json();
+      })
       .then(data => {
         setDictionary(data);
         setLoading(false);
       })
       .catch(err => {
-        console.error("Failed to load dictionary:", err);
-        setLoading(false);
+        console.warn("Target language dictionary missing, falling back to English...");
+        fetch('/data/dictionary.json')
+          .then(res => res.json())
+          .then(data => {
+            setDictionary(data);
+            setLoading(false);
+          });
       });
-  }, []);
+  }, [language]);
 
   // Compute Search + Filters Results
   const filteredResults = useMemo(() => {
@@ -109,23 +119,22 @@ export default function Home() {
       <div className="max-w-5xl mx-auto px-6 pt-20">
         
         {/* Top Navigation */}
-        <div className="flex justify-end mb-4 gap-3 items-center">
-          <ThemeToggle />
+        <div className="flex justify-end mb-4 items-center">
           <a href="/analytics" className="text-sm font-semibold tracking-widest uppercase text-stone-600 dark:text-stone-400 hover:text-sky-500 dark:hover:text-sky-400 transition-colors bg-white/50 dark:bg-stone-900/50 px-4 py-2 rounded-lg border border-stone-200 dark:border-stone-800 flex items-center shadow-sm">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
             </svg>
-            Analytics Dashboard
+            {t("nav.analytics")}
           </a>
         </div>
 
         {/* Header Section */}
         <div className="text-center mb-16 space-y-4">
           <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight bg-gradient-to-tr from-sky-600 to-emerald-500 dark:from-sky-400 dark:to-emerald-400 bg-clip-text text-transparent drop-shadow-sm pb-2">
-            Coptic Dictionary
+            {t("dict.title")}
           </h1>
           <p className="text-lg md:text-xl text-stone-500 dark:text-stone-400 font-medium max-w-2xl mx-auto">
-            A lightning-fast, fuzzy-search digital lexicon crafted for scholars.
+            {t("dict.subtitle")}
           </p>
         </div>
 
@@ -141,7 +150,7 @@ export default function Home() {
             <input 
               ref={searchInputRef}
               type="text" 
-              placeholder="Search in Coptic, English, or Greek..." 
+              placeholder={t("dict.searchPlaceholder")} 
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               className="w-full bg-white/80 dark:bg-stone-900/80 backdrop-blur-xl border border-stone-200 dark:border-stone-700/80 text-stone-900 dark:text-stone-100 text-lg md:text-2xl rounded-2xl p-6 pl-16 pr-24 focus:outline-none focus:ring-2 focus:ring-sky-500/50 shadow-xl dark:shadow-2xl transition-all font-coptic placeholder:font-sans placeholder:text-stone-400 dark:placeholder:text-stone-500"
@@ -182,21 +191,21 @@ export default function Home() {
           {/* Filters Suite */}
           <div className="flex flex-wrap gap-4 items-center justify-center p-4 bg-white/60 dark:bg-stone-900/60 backdrop-blur-md border border-stone-200 dark:border-stone-800 rounded-xl relative z-10 shadow-sm">
             <div className="flex items-center space-x-2">
-              <span className="text-sm font-semibold text-stone-500 dark:text-stone-400 uppercase tracking-widest">Part of Speech:</span>
+              <span className="text-sm font-semibold text-stone-500 dark:text-stone-400 uppercase tracking-widest">{t("dict.pos")}</span>
               <select className="bg-white dark:bg-stone-950 border border-stone-300 dark:border-stone-700 rounded-md text-sm p-1.5 focus:ring-sky-500 text-stone-700 dark:text-stone-300 outline-none cursor-pointer" value={selectedPOS} onChange={e => setSelectedPOS(e.target.value)}>
-                <option value="ALL">Any</option>
-                <option value="V">Verb</option>
-                <option value="N">Noun</option>
-                <option value="ADJ">Adjective</option>
-                <option value="ADV">Adverb</option>
-                <option value="PREP">Preposition</option>
+                <option value="ALL">{t("dict.any")}</option>
+                <option value="V">{t("dict.verb")}</option>
+                <option value="N">{t("dict.noun")}</option>
+                <option value="ADJ">{t("dict.adj")}</option>
+                <option value="ADV">{t("dict.adv")}</option>
+                <option value="PREP">{t("dict.prep")}</option>
               </select>
             </div>
             <div className="w-px h-6 bg-stone-300 dark:bg-stone-700 hidden sm:block"></div>
             <div className="flex items-center space-x-2">
-              <span className="text-sm font-semibold text-stone-500 dark:text-stone-400 uppercase tracking-widest">Dialect:</span>
+              <span className="text-sm font-semibold text-stone-500 dark:text-stone-400 uppercase tracking-widest">{t("dict.dialect")}</span>
               <select className="bg-white dark:bg-stone-950 border border-stone-300 dark:border-stone-700 rounded-md text-sm p-1.5 focus:ring-sky-500 text-stone-700 dark:text-stone-300 outline-none cursor-pointer" value={selectedDialect} onChange={e => setSelectedDialect(e.target.value)}>
-                <option value="ALL">Any</option>
+                <option value="ALL">{t("dict.any")}</option>
                 <option value="S">Sahidic (S)</option>
                 <option value="B">Bohairic (B)</option>
                 <option value="A">Akhmimic (A)</option>
@@ -212,8 +221,8 @@ export default function Home() {
           <div className="flex justify-between items-center mb-6 text-stone-500 dark:text-stone-400">
             <span className="text-sm font-medium">
               {query.trim().length === 0 && selectedPOS === "ALL" && selectedDialect === "ALL" 
-                ? `Showing ${visibleResults.length} out of ${dictionary.length} entries...` 
-                : `Found ${filteredResults.length} result(s)`
+                ? `${t("dict.showing")} ${visibleResults.length} ${t("dict.outOf")} ${dictionary.length} ${t("dict.entries")}` 
+                : `${t("dict.found")} ${filteredResults.length} ${t("dict.results")}`
               }
             </span>
           </div>
@@ -229,15 +238,14 @@ export default function Home() {
         {/* No Results */}
         {!loading && filteredResults.length === 0 && (
           <div className="text-center py-20 bg-stone-50/80 dark:bg-stone-900/30 rounded-2xl border border-stone-200 dark:border-stone-800/50 backdrop-blur-sm">
-            <p className="text-2xl text-stone-600 dark:text-stone-500 font-medium">No distinct forms match your query.</p>
-            <p className="text-stone-500 dark:text-stone-600 mt-2">Try adjusting the fuzzy search or removing filters.</p>
+            <p className="text-2xl text-stone-600 dark:text-stone-500 font-medium">{t("dict.noMatch")}</p>
+            <p className="text-stone-500 dark:text-stone-600 mt-2">{t("dict.tryFuzzy")}</p>
           </div>
         )}
 
-        {/* Results Grid / List */}
         <div className="grid gap-6">
           {visibleResults.map(entry => (
-            <DictionaryEntryCard key={entry.id} entry={entry} query={query} />
+            <DictionaryEntryCard key={entry.id} entry={entry} query={query} selectedDialect={selectedDialect} />
           ))}
         </div>
 

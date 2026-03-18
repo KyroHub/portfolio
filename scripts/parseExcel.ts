@@ -147,13 +147,17 @@ function main() {
   for (const item of rawData) {
     if (!item.word || !item.meaning) continue;
 
-    const { headword, dialects } = extractDialectsAndHeadword(item.word);
-    const pos = classifyPOS(item.meaning);
-    const gender = classifyNounGender(item.meaning, pos);
-    const greek = extractGreek(item.meaning);
+    // HTML tags are now stripped during the initial data extraction
+    const cleanWord = item.word.replace(/<[^>]+>/g, '');
+    const cleanMeaningRaw = item.meaning.replace(/<[^>]+>/g, '');
+
+    const { headword, dialects } = extractDialectsAndHeadword(cleanWord);
+    const pos = classifyPOS(cleanMeaningRaw);
+    const gender = classifyNounGender(cleanMeaningRaw, pos);
+    const greek = extractGreek(cleanMeaningRaw);
     
     // Simple basic string cleanup
-    const cleanMeaningLines = item.meaning
+    const cleanMeaningLines = cleanMeaningRaw
       .split('\n')
       .map(line => line.trim())
       .filter(line => line.length > 0);
@@ -167,8 +171,8 @@ function main() {
       english_meanings: cleanMeaningLines, // Keep all lines perfectly intact (including sub-meanings starting with ―)
       greek_equivalents: greek,
       raw: {
-        word: item.word,
-        meaning: item.meaning
+        word: cleanWord,
+        meaning: cleanMeaningRaw
       }
     };
     

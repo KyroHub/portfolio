@@ -2,9 +2,12 @@ import Link from 'next/link';
 import { LexicalEntry } from '../../scripts/parseExcel';
 import HighlightText from './HighlightText';
 
-export default function DictionaryEntryCard({ entry, query = "" }: { entry: LexicalEntry, query?: string }) {
+export default function DictionaryEntryCard({ entry, query = "", selectedDialect = "ALL" }: { entry: LexicalEntry, query?: string, selectedDialect?: string }) {
   let primaryDialectKey = 'S';
-  if (!entry.dialects['S']) {
+  
+  if (selectedDialect !== "ALL" && entry.dialects[selectedDialect]) {
+    primaryDialectKey = selectedDialect;
+  } else if (!entry.dialects['S']) {
     primaryDialectKey = Object.keys(entry.dialects)[0];
   }
 
@@ -57,12 +60,13 @@ export default function DictionaryEntryCard({ entry, query = "" }: { entry: Lexi
       {/* Translations */}
       <div className="mb-6 space-y-2">
         <h3 className="text-sm text-stone-500 dark:text-stone-400 uppercase tracking-widest font-semibold mb-2">Translation</h3>
-        {entry.english_meanings.map((meaning, idx) => (
-          <p key={idx} className="text-stone-800 dark:text-stone-200 text-lg leading-relaxed flex items-start">
-            <span className="text-sky-500 mr-2 mt-1">✦</span>
-            <HighlightText text={meaning} query={query} />
-          </p>
-        ))}
+        <ul className="space-y-1 text-stone-800 dark:text-stone-200 text-lg list-disc ml-5 marker:text-sky-500">
+          {entry.english_meanings.map((meaning, idx) => (
+            <li key={idx} className="leading-relaxed pl-1">
+              <HighlightText text={meaning} query={query} />
+            </li>
+          ))}
+        </ul>
         {entry.greek_equivalents.length > 0 && (
           <div className="mt-4 flex flex-col gap-2">
             <span className="text-sm text-stone-500 font-medium">Greek Equivalents:</span>
