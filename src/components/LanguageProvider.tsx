@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, startTransition, useContext, useEffect, useState } from "react";
 
 type Language = "en" | "nl";
 
@@ -20,6 +20,7 @@ const translations = {
     "nav.publications": "Publications",
     "nav.dictionary": "Dictionary",
     "nav.grammar": "Grammar",
+    "nav.contact": "Contact",
     "nav.analytics": "Analytics Dashboard",
     "footer.rights": "All rights reserved.",
 
@@ -58,12 +59,34 @@ const translations = {
     "grammar.lesson1.desc": "Master the basics of Coptic nouns, determiners, and independent personal pronouns.",
     "grammar.lesson2.title": "Lesson 02",
     "grammar.lesson2.desc": "Dive into verbal prefixes, adjectives, and constructing complex nominal sentences.",
+
+    "contact.title": "Get in Touch",
+    "contact.subtitle":
+      "Academic inquiries, dictionary feedback, grammar questions, or just to say hello. I'd love to hear from you.",
+    "contact.name": "Full Name",
+    "contact.email": "Email Address",
+    "contact.inquiry": "Type of Inquiry",
+    "contact.select": "Select one...",
+    "contact.message": "Message",
+    "contact.namePlaceholder": "Kyrillos Wannes",
+    "contact.emailPlaceholder": "you@email.com",
+    "contact.messagePlaceholder":
+      "Hi Kyrillos, I really enjoyed your Coptic dictionary and had a question about...",
+    "contact.send": "Send Message",
+    "contact.sending": "Sending...",
+    "contact.success": "Message sent successfully. I'll reply soon!",
+    "contact.option.dictionary": "Dictionary Feedback",
+    "contact.option.grammar": "Grammar / Linguistics Question",
+    "contact.option.research": "Research Collaboration",
+    "contact.option.publication": "Publication / Book Inquiry",
+    "contact.option.general": "General Message",
   },
   nl: {
     "nav.home": "Thuis",
     "nav.publications": "Publicaties",
     "nav.dictionary": "Woordenboek",
     "nav.grammar": "Grammatica",
+    "nav.contact": "Contact",
     "nav.analytics": "Analytics-dashboard",
     "footer.rights": "Alle rechten voorbehouden.",
 
@@ -102,26 +125,51 @@ const translations = {
     "grammar.lesson1.desc": "Beheers de basis van Koptische zelfstandige naamwoorden, determinatoren en onafhankelijke persoonlijke voornaamwoorden.",
     "grammar.lesson2.title": "Les 02",
     "grammar.lesson2.desc": "Duik in werkwoordelijke voorvoegsels, bijvoeglijke naamwoorden en het construeren van complexe nominale zinnen.",
+
+    "contact.title": "Neem Contact Op",
+    "contact.subtitle":
+      "Academische vragen, feedback over het woordenboek, grammaticale kwesties, of gewoon een vriendelijk bericht. Ik hoor graag van je.",
+    "contact.name": "Volledige Naam",
+    "contact.email": "E-mailadres",
+    "contact.inquiry": "Type Vraag",
+    "contact.select": "Selecteer een optie...",
+    "contact.message": "Bericht",
+    "contact.namePlaceholder": "Kyrillos Wannes",
+    "contact.emailPlaceholder": "jij@email.com",
+    "contact.messagePlaceholder":
+      "Dag Kyrillos, ik vond je Koptische woordenboek erg waardevol en had een vraag over...",
+    "contact.send": "Verstuur Bericht",
+    "contact.sending": "Verzenden...",
+    "contact.success": "Bericht succesvol verzonden. Ik antwoord binnenkort!",
+    "contact.option.dictionary": "Feedback over het woordenboek",
+    "contact.option.grammar": "Vraag over grammatica / linguistiek",
+    "contact.option.research": "Onderzoekssamenwerking",
+    "contact.option.publication": "Vraag over publicatie / boek",
+    "contact.option.general": "Algemeen bericht",
   }
 };
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
   const [language, setLanguageState] = useState<Language>("en");
-  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
-    setIsMounted(true);
     // Determine initial language from localStorage or User's OS setting
     const storedLang = localStorage.getItem("app-language") as Language | null;
     if (storedLang === "en" || storedLang === "nl") {
-      setLanguageState(storedLang);
+      startTransition(() => {
+        setLanguageState(storedLang);
+      });
     } else {
       const userLang = navigator.language.toLowerCase();
       if (userLang.startsWith("nl")) {
-        setLanguageState("nl");
+        startTransition(() => {
+          setLanguageState("nl");
+        });
         localStorage.setItem("app-language", "nl");
       } else {
-        setLanguageState("en");
+        startTransition(() => {
+          setLanguageState("en");
+        });
         localStorage.setItem("app-language", "en");
       }
     }

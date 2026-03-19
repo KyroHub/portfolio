@@ -17,6 +17,7 @@ export function Navbar() {
     { href: "/publications", label: t("nav.publications") },
     { href: "/dictionary", label: t("nav.dictionary") },
     { href: "/grammar", label: t("nav.grammar") },
+    { href: "/contact", label: t("nav.contact") },
   ];
 
   return (
