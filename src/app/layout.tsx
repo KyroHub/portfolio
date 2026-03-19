@@ -38,11 +38,6 @@ export const metadata: Metadata = {
   creator: siteConfig.author.name,
   publisher: siteConfig.author.name,
   category: "education",
-  alternates: siteUrl
-    ? {
-        canonical: "/",
-      }
-    : undefined,
   openGraph: {
     type: "website",
     title: siteConfig.title,

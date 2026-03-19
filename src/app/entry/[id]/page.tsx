@@ -1,29 +1,67 @@
+import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import fs from 'fs';
-import path from 'path';
-import { LexicalEntry } from '../../../../scripts/parseExcel';
 import DictionaryEntryCard from '@/components/DictionaryEntry';
+import StructuredData from '@/components/StructuredData';
 import Link from 'next/link';
-
-// Read JSON data from the file system (this runs on the server)
-async function getDictionary(): Promise<LexicalEntry[]> {
-  const filePath = path.join(process.cwd(), 'public/data/dictionary.json');
-  if (!fs.existsSync(filePath)) return [];
-  const fileContents = fs.readFileSync(filePath, 'utf8');
-  return JSON.parse(fileContents);
-}
+import { getDictionary } from '@/lib/dictionary';
+import { buildPageTitle, siteConfig } from '@/lib/site';
+import {
+  buildEntryDescription,
+  createDefinedTermStructuredData,
+  toPlainText,
+} from '@/lib/structuredData';
 
 // Generate static params so the pages are pre-rendered at build time
 export async function generateStaticParams() {
-  const dictionary = await getDictionary();
+  const dictionary = getDictionary();
   return dictionary.map(entry => ({
     id: entry.id,
   }));
 }
 
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const resolvedParams = await params;
+  const dictionary = getDictionary();
+  const entry = dictionary.find((item) => item.id === resolvedParams.id);
+
+  if (!entry) {
+    return {
+      title: "Entry Not Found",
+      robots: {
+        index: false,
+        follow: false,
+      },
+    };
+  }
+
+  const headword = toPlainText(entry.headword);
+  const description = buildEntryDescription(entry);
+
+  return {
+    title: headword,
+    description,
+    alternates: {
+      canonical: `/entry/${entry.id}`,
+    },
+    openGraph: {
+      title: buildPageTitle(headword),
+      description,
+      url: `${siteConfig.liveUrl}/entry/${entry.id}`,
+    },
+    twitter: {
+      title: buildPageTitle(headword),
+      description,
+    },
+  };
+}
+
 export default async function EntryPage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = await params;
-  const dictionary = await getDictionary();
+  const dictionary = getDictionary();
   const entry = dictionary.find(e => e.id === resolvedParams.id);
 
   if (!entry) {
@@ -32,6 +70,7 @@ export default async function EntryPage({ params }: { params: Promise<{ id: stri
 
   return (
     <main className="min-h-screen relative overflow-hidden pb-20 pt-16 px-6">
+      <StructuredData data={createDefinedTermStructuredData(entry)} />
       
       {/* Background Elements */}
       <div className="absolute top-0 left-0 w-full h-[500px] bg-sky-900/10 rounded-b-full blur-[120px] -z-10 pointer-events-none"></div>
@@ -46,7 +85,7 @@ export default async function EntryPage({ params }: { params: Promise<{ id: stri
           </Link>
         </div>
         
-        <DictionaryEntryCard entry={entry} />
+        <DictionaryEntryCard entry={entry} headingLevel="h1" linkHeadword={false} />
       </div>
     </main>
   );

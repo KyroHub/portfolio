@@ -3,7 +3,21 @@ import { antinoou } from '@/lib/fonts';
 import { LexicalEntry } from '../../scripts/parseExcel';
 import HighlightText from './HighlightText';
 
-export default function DictionaryEntryCard({ entry, query = "", selectedDialect = "ALL" }: { entry: LexicalEntry, query?: string, selectedDialect?: string }) {
+type DictionaryEntryCardProps = {
+  entry: LexicalEntry;
+  query?: string;
+  selectedDialect?: string;
+  headingLevel?: 'h1' | 'h2';
+  linkHeadword?: boolean;
+};
+
+export default function DictionaryEntryCard({
+  entry,
+  query = "",
+  selectedDialect = "ALL",
+  headingLevel = "h2",
+  linkHeadword = true,
+}: DictionaryEntryCardProps) {
   let primaryDialectKey = 'S';
   
   if (selectedDialect !== "ALL" && entry.dialects[selectedDialect]) {
@@ -30,18 +44,31 @@ export default function DictionaryEntryCard({ entry, query = "", selectedDialect
   }
 
   const remainingDialects = Object.entries(entry.dialects).filter(([dialect]) => dialect !== primaryDialectKey);
+  const HeadingTag = headingLevel;
+  const headingClassName = `${antinoou.className} text-4xl text-sky-600 dark:text-sky-400 tracking-wider drop-shadow-sm transition-colors ${
+    linkHeadword
+      ? 'hover:text-sky-500 dark:hover:text-sky-300 cursor-pointer'
+      : ''
+  }`;
+  const headingContent = (
+    <HeadingTag className={headingClassName}>
+      <HighlightText text={headerSpelling} query={query} />
+    </HeadingTag>
+  );
 
   return (
-    <div className="group relative rounded-2xl bg-white/70 dark:bg-stone-900/50 backdrop-blur-md border border-stone-200 dark:border-stone-800 p-6 shadow-md dark:shadow-lg dark:shadow-black/20 hover:border-stone-300 dark:hover:border-stone-700 hover:bg-white dark:hover:bg-stone-800/50 transition-all duration-300">
+    <article className="group relative rounded-2xl bg-white/70 dark:bg-stone-900/50 backdrop-blur-md border border-stone-200 dark:border-stone-800 p-6 shadow-md dark:shadow-lg dark:shadow-black/20 hover:border-stone-300 dark:hover:border-stone-700 hover:bg-white dark:hover:bg-stone-800/50 transition-all duration-300">
       
       {/* Top Banner: Headword and Main Badges */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
         <div>
-          <Link href={`/entry/${entry.id}`} prefetch={false} className="inline-block">
-            <h2 className={`${antinoou.className} text-4xl text-sky-600 dark:text-sky-400 tracking-wider drop-shadow-sm hover:text-sky-500 dark:hover:text-sky-300 transition-colors cursor-pointer`}>
-              <HighlightText text={headerSpelling} query={query} />
-            </h2>
-          </Link>
+          {linkHeadword ? (
+            <Link href={`/entry/${entry.id}`} prefetch={false} className="inline-block">
+              {headingContent}
+            </Link>
+          ) : (
+            headingContent
+          )}
         </div>
         
         <div className="flex flex-wrap gap-2 text-xs font-semibold">
@@ -113,6 +140,6 @@ export default function DictionaryEntryCard({ entry, query = "", selectedDialect
         </div>
       )}
 
-    </div>
+    </article>
   );
 }

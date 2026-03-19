@@ -24,6 +24,10 @@ export const siteConfig = {
   dictionaryEntryCount: 3330,
 };
 
+export function buildPageTitle(title: string) {
+  return `${title} | ${siteConfig.name}`;
+}
+
 export function getSiteUrl() {
   const rawUrl =
     process.env.NEXT_PUBLIC_SITE_URL ??
