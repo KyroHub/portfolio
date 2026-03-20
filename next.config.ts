@@ -25,7 +25,7 @@ function buildContentSecurityPolicy() {
     "script-src 'self' 'unsafe-inline'",
     "style-src 'self' 'unsafe-inline'",
     "font-src 'self' data:",
-    "img-src 'self' data: blob: https://tools.applemediaservices.com",
+    "img-src 'self' data: blob: https://tools.applemediaservices.com https://toolbox.marketingtools.apple.com https://*.mzstatic.com",
     `connect-src ${connectSrc}`,
     "worker-src 'self' blob:",
     "manifest-src 'self'",
@@ -84,6 +84,10 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "tools.applemediaservices.com",
+      },
+      {
+        protocol: "https",
+        hostname: "toolbox.marketingtools.apple.com",
       },
     ],
   },

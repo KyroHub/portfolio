@@ -1,9 +1,8 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import DictionaryEntryCard from '@/components/DictionaryEntry';
+import EntryPageHeader from '@/components/EntryPageHeader';
 import StructuredData from '@/components/StructuredData';
-import Link from 'next/link';
-import { ArrowLeft } from 'lucide-react';
 import { getDictionary } from '@/lib/dictionary';
 import { buildPageTitle, siteConfig } from '@/lib/site';
 import {
@@ -77,16 +76,7 @@ export default async function EntryPage({ params }: { params: Promise<{ id: stri
       <div className="absolute top-28 right-[-10%] w-[440px] h-[440px] bg-emerald-500/10 dark:bg-emerald-900/10 rounded-full blur-[100px] -z-10 pointer-events-none" />
 
       <div className="max-w-4xl mx-auto">
-        <div className="mb-8 flex items-center justify-between gap-4 flex-wrap">
-          <Link href="/dictionary" className="btn-secondary gap-2 px-4">
-            <ArrowLeft className="h-4 w-4" />
-            Back to Dictionary Search
-          </Link>
-
-          <span className="inline-flex items-center rounded-full border border-sky-200 bg-sky-50 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-sky-700 dark:border-sky-900/50 dark:bg-sky-950/40 dark:text-sky-400">
-            Dictionary Entry
-          </span>
-        </div>
+        <EntryPageHeader />
         
         <DictionaryEntryCard entry={entry} headingLevel="h1" linkHeadword={false} />
       </div>

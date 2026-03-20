@@ -11,6 +11,7 @@ import {
   type PreparedLexicalEntry,
 } from "../../lib/searchEngine";
 import CopticKeyboard from "@/components/CopticKeyboard";
+import DialectSiglum from "@/components/DialectSiglum";
 import { useLanguage } from "@/components/LanguageProvider";
 import { antinoou } from "@/lib/fonts";
 
@@ -82,8 +83,8 @@ function DictionaryResultsSection({
                 </span>
               )}
               {selectedDialect !== "ALL" && (
-                <span className="inline-flex items-center rounded-full border border-sky-200 bg-sky-50 px-3 py-1 text-sky-700 dark:border-sky-900/50 dark:bg-sky-950/40 dark:text-sky-400">
-                  {t("dict.dialect")} {selectedDialect}
+                <span className="inline-flex min-h-8 items-center rounded-full border border-sky-200 bg-sky-50 px-3.5 py-2 text-sky-700 dark:border-sky-900/50 dark:bg-sky-950/40 dark:text-sky-400">
+                  {t("dict.dialect")} <span className="ml-1"><DialectSiglum siglum={selectedDialect} /></span>
                 </span>
               )}
             </div>
@@ -315,12 +316,12 @@ function DictionaryPageBody({ dictionaryPath, t }: DictionaryPageBodyProps) {
             <div className="flex items-center space-x-2">
               <span className="text-xs font-semibold text-stone-500 dark:text-stone-400 uppercase tracking-widest">{t("dict.dialect")}</span>
               <select className="bg-white dark:bg-stone-950 border border-stone-300 dark:border-stone-700 rounded-lg px-3 py-2 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-sky-500/30 text-stone-700 dark:text-stone-300 cursor-pointer" value={selectedDialect} onChange={(e) => setSelectedDialect(e.target.value)}>
-                <option value="ALL">{t("dict.any")}</option>
-                <option value="S">Sahidic (S)</option>
-                <option value="B">Bohairic (B)</option>
-                <option value="A">Akhmimic (A)</option>
-                <option value="L">Lycopolitan (L)</option>
-                <option value="F">Fayyumic (F)</option>
+                <option value="ALL">{t("dialect.ALL")}</option>
+                <option value="S">{t("dialect.S")} (S)</option>
+                <option value="B">{t("dialect.B")} (B)</option>
+                <option value="A">{t("dialect.A")} (A)</option>
+                <option value="L">{t("dialect.L")} (L)</option>
+                <option value="F">{t("dialect.F")} (F)</option>
               </select>
             </div>
           </div>

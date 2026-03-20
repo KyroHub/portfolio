@@ -1,7 +1,11 @@
+"use client";
+
 import Link from 'next/link';
 import { antinoou } from '@/lib/fonts';
 import type { LexicalEntry } from '@/lib/dictionaryTypes';
 import HighlightText from './HighlightText';
+import DialectSiglum from './DialectSiglum';
+import { useLanguage } from '@/components/LanguageProvider';
 
 type DictionaryEntryCardProps = {
   entry: LexicalEntry;
@@ -18,6 +22,7 @@ export default function DictionaryEntryCard({
   headingLevel = "h2",
   linkHeadword = true,
 }: DictionaryEntryCardProps) {
+  const { t } = useLanguage();
   const isDetailView = headingLevel === "h1";
   let primaryDialectKey = 'S';
   
@@ -88,19 +93,21 @@ export default function DictionaryEntryCard({
                 ? 'bg-pink-50 dark:bg-pink-950/40 border-pink-200 dark:border-pink-900/50 text-pink-600 dark:text-pink-300'
                 : 'bg-sky-50 dark:bg-sky-950/40 border-sky-200 dark:border-sky-900/50 text-sky-600 dark:text-sky-300'
             }`}>
-              Gender: {entry.gender}
+              {t("entry.gender")}: {entry.gender}
             </span>
           )}
-          <span className="px-3 py-1 rounded-full border border-emerald-200 dark:border-emerald-900/50 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400">
-            {primaryDialectKey}
-          </span>
+          {primaryDialectKey && (
+            <span className="inline-flex min-h-8 items-center px-3.5 py-2 rounded-full border border-emerald-200 dark:border-emerald-900/50 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400">
+              <DialectSiglum siglum={primaryDialectKey} />
+            </span>
+          )}
         </div>
       </div>
 
       <div className="h-px w-full bg-gradient-to-r from-stone-200 dark:from-stone-800 via-stone-300 dark:via-stone-700 to-stone-200 dark:to-stone-800 mb-6" />
 
       <div className="mb-6 space-y-3">
-        <h3 className="text-xs text-stone-500 dark:text-stone-400 uppercase tracking-widest font-semibold">Translation</h3>
+        <h3 className="text-xs text-stone-500 dark:text-stone-400 uppercase tracking-widest font-semibold">{t("entry.translation")}</h3>
         <ul className={`space-y-2 text-stone-800 dark:text-stone-200 list-disc ml-5 marker:text-sky-500 ${
           isDetailView ? "text-lg md:text-xl" : "text-lg"
         }`}>
@@ -112,7 +119,7 @@ export default function DictionaryEntryCard({
         </ul>
         {entry.greek_equivalents.length > 0 && (
           <div className="mt-5 flex flex-col gap-3">
-            <span className="text-xs uppercase tracking-widest text-stone-500 dark:text-stone-400 font-semibold">Greek Equivalents</span>
+            <span className="text-xs uppercase tracking-widest text-stone-500 dark:text-stone-400 font-semibold">{t("entry.greekEquivalents")}</span>
             <div className="flex flex-wrap gap-2">
               {entry.greek_equivalents.map((gr, idx) => (
                 <span key={idx} className="px-3 py-1.5 bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-900/50 text-emerald-700 dark:text-emerald-400 rounded-xl text-sm font-medium">
@@ -126,7 +133,7 @@ export default function DictionaryEntryCard({
 
       {remainingDialects.length > 0 && (
         <div className="mt-7 pt-5 border-t border-stone-200 dark:border-stone-800/50">
-          <h4 className="text-xs text-stone-500 dark:text-stone-400 uppercase tracking-widest font-semibold mb-3">Dialect Forms</h4>
+          <h4 className="text-xs text-stone-500 dark:text-stone-400 uppercase tracking-widest font-semibold mb-3">{t("entry.dialectForms")}</h4>
           <div className="flex flex-wrap gap-3">
             {remainingDialects.map(([dialect, forms], index) => {
               const parts = [];
@@ -143,7 +150,9 @@ export default function DictionaryEntryCard({
               
               return (
               <div key={index} className="flex items-center space-x-3 bg-stone-50/90 dark:bg-stone-950/50 px-3 py-2.5 rounded-xl border border-stone-200 dark:border-stone-800/60">
-                <span className="text-[10px] bg-stone-200 dark:bg-stone-700 text-stone-700 dark:text-stone-200 px-2 py-1 rounded-md font-bold uppercase">{dialect}</span>
+                <span className="inline-flex min-h-7 items-center text-[10px] bg-stone-200 dark:bg-stone-700 text-stone-700 dark:text-stone-200 px-2.5 py-2 rounded-md font-bold">
+                  <DialectSiglum siglum={dialect} />
+                </span>
                 <span className={`${antinoou.className} text-stone-800 dark:text-stone-300 text-lg`}>
                   <HighlightText text={spelling} query={query} />
                 </span>

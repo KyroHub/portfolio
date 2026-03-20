@@ -136,7 +136,7 @@ export default function HomePageClient() {
               title={t("home.comingSoon")}
             >
               <Image
-                src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/en-us?size=250x83&amp;releaseDate=1276560000&h=7e7b68fad19738b5649a1bfb78ff46e9"
+                src="https://toolbox.marketingtools.apple.com/api/badges/download-on-the-app-store/black/en-us?size=250x83&releaseDate=1276560000&h=7e7b68fad19738b5649a1bfb78ff46e9"
                 alt="Download on the App Store"
                 width={250}
                 height={83}

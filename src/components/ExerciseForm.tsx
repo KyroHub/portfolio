@@ -10,6 +10,7 @@ import type {
 import type { User } from "@supabase/supabase-js";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import { useLanguage } from "@/components/LanguageProvider";
 
 export function ExerciseForm({
   lessonSlug,
@@ -20,6 +21,7 @@ export function ExerciseForm({
   language: ExerciseLanguage;
   questions: LessonExerciseQuestion[];
 }) {
+  const { t } = useLanguage();
   const [user, setUser] = useState<User | null>(null);
   const authAvailable = hasSupabaseEnv();
   const supabase = createClient();
@@ -44,7 +46,7 @@ export function ExerciseForm({
     return (
       <div className="mt-6 p-6 rounded-2xl border border-stone-200 dark:border-stone-800 bg-white/60 dark:bg-stone-900/50 text-center shadow-sm backdrop-blur-md">
         <p className="text-stone-600 dark:text-stone-400 mb-4 font-medium">
-          Login-based exercise submission is temporarily unavailable.
+          {t("exercise.authUnavailable")}
         </p>
       </div>
     );
@@ -53,9 +55,9 @@ export function ExerciseForm({
   if (!user) {
     return (
       <div className="mt-6 p-6 rounded-2xl border border-sky-100 dark:border-sky-800/60 bg-white/60 dark:bg-stone-900/50 text-center shadow-sm backdrop-blur-md">
-        <p className="text-stone-600 dark:text-stone-400 mb-4 font-medium">Log in to type your answers and receive personalized feedback.</p>
+        <p className="text-stone-600 dark:text-stone-400 mb-4 font-medium">{t("exercise.loginPrompt")}</p>
         <Link href="/login" className="btn-primary px-6">
-          Log In to Practice
+          {t("exercise.loginCta")}
         </Link>
       </div>
     );
@@ -64,12 +66,12 @@ export function ExerciseForm({
   if (state?.success) {
     return (
       <div className="mt-6 p-6 rounded-2xl border border-emerald-100 dark:border-emerald-800/50 bg-emerald-50 dark:bg-emerald-900/20 text-center shadow-sm">
-        <h3 className="text-xl font-bold text-emerald-700 dark:text-emerald-400 mb-2">Translations Submitted!</h3>
+        <h3 className="text-xl font-bold text-emerald-700 dark:text-emerald-400 mb-2">{t("exercise.submittedTitle")}</h3>
         <p className="text-emerald-600 dark:text-emerald-500 font-medium font-sans">
-          Your answers have been securely saved. Kyrillos will review them shortly.
+          {t("exercise.submittedBody")}
         </p>
         <Link href="/dashboard" className="inline-flex mt-4 h-11 items-center justify-center rounded-xl bg-emerald-600 px-6 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-emerald-500 dark:bg-emerald-500 dark:hover:bg-emerald-400">
-          View My Dashboard
+          {t("exercise.viewDashboard")}
         </Link>
       </div>
     );
@@ -89,7 +91,7 @@ export function ExerciseForm({
             type="text"
             name={`answer_${question.id}`}
             className="input-base h-auto py-4 px-5 font-coptic text-xl"
-            placeholder="Type your translation here..."
+            placeholder={t("exercise.answerPlaceholder")}
             autoComplete="off"
             required
           />
@@ -101,7 +103,7 @@ export function ExerciseForm({
           disabled={isPending}
           className="btn-primary w-full sm:w-auto flex justify-center items-center gap-2 px-8"
         >
-          {isPending ? "Submitting securely..." : "Submit Translations"}
+          {isPending ? t("exercise.submitting") : t("exercise.submit")}
           <ArrowRight size={20} />
         </button>
       </div>

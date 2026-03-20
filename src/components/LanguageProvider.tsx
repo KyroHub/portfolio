@@ -16,6 +16,10 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 // A simple dictionary for UI strings
 const translations = {
   en: {
+    "lang.toggle": "Toggle language",
+    "lang.switchToDutch": "Switch to Dutch",
+    "lang.switchToEnglish": "Switch to English",
+
     "nav.home": "Home",
     "nav.publications": "Publications",
     "nav.dictionary": "Dictionary",
@@ -63,6 +67,37 @@ const translations = {
     "dict.noMatch": "No distinct forms match your query.",
     "dict.tryFuzzy": "Try adjusting the fuzzy search or removing filters.",
 
+    "dialect.ALL": "All dialects",
+    "dialect.A": "Akhmimic",
+    "dialect.B": "Bohairic",
+    "dialect.F": "Fayyumic",
+    "dialect.Fb": "Fayyumic with Bohairic tendencies",
+    "dialect.L": "Lycopolitan",
+    "dialect.La": "Sahidic with Lycopolitan tendencies",
+    "dialect.O": "Old Coptic",
+    "dialect.S": "Sahidic",
+    "dialect.Sa": "Sahidic with Akhmimic tendencies",
+    "dialect.Sf": "Sahidic with Fayyumic tendencies",
+
+    "entry.back": "Back to Dictionary Search",
+    "entry.badge": "Dictionary Entry",
+    "entry.gender": "Gender",
+    "entry.translation": "Translation",
+    "entry.greekEquivalents": "Greek Equivalents",
+    "entry.dialectForms": "Dialect Forms",
+
+    "analytics.back": "Back to Dictionary Search",
+    "analytics.filter": "Filter Analytics",
+    "analytics.title": "Dictionary Analytics",
+    "analytics.totalRoots": "Total Roots",
+    "analytics.meaningUnknown": "Meaning Unknown",
+    "analytics.meaningUncertain": "Meaning Uncertain",
+    "analytics.posBreakdown": "Part of Speech Breakdown",
+    "analytics.nounGenders": "Noun Genders",
+    "analytics.total": "Total",
+    "analytics.verbalNouns": "Verbal Nouns (All Verbs)",
+    "analytics.totalMasculine": "Total Masculine Concept",
+
     "grammar.title": "Coptic Grammar",
     "grammar.subtitle": "Interactive lessons and exercises to master the Coptic language.",
     "grammar.lessonBadge": "Lesson",
@@ -73,6 +108,16 @@ const translations = {
     "grammar.lesson1.desc": "Master the basics of Coptic nouns, determiners, and independent personal pronouns.",
     "grammar.lesson2.title": "Lesson 02",
     "grammar.lesson2.desc": "Dive into verbal prefixes, adjectives, and constructing complex nominal sentences.",
+
+    "exercise.authUnavailable": "Login-based exercise submission is temporarily unavailable.",
+    "exercise.loginPrompt": "Log in to type your answers and receive personalized feedback.",
+    "exercise.loginCta": "Log In to Practice",
+    "exercise.submittedTitle": "Translations Submitted!",
+    "exercise.submittedBody": "Your answers have been securely saved. Kyrillos will review them shortly.",
+    "exercise.viewDashboard": "View My Dashboard",
+    "exercise.answerPlaceholder": "Type your translation here...",
+    "exercise.submitting": "Submitting securely...",
+    "exercise.submit": "Submit Translations",
 
     "contact.title": "Get in Touch",
     "contact.subtitle":
@@ -113,6 +158,10 @@ const translations = {
     "login.notice.signupRateLimited": "Too many account creation attempts. Please try again later.",
   },
   nl: {
+    "lang.toggle": "Taal wisselen",
+    "lang.switchToDutch": "Overschakelen naar het Nederlands",
+    "lang.switchToEnglish": "Overschakelen naar het Engels",
+
     "nav.home": "Thuis",
     "nav.publications": "Publicaties",
     "nav.dictionary": "Woordenboek",
@@ -160,6 +209,37 @@ const translations = {
     "dict.noMatch": "Geen unieke vormen komen overeen met uw zoekopdracht.",
     "dict.tryFuzzy": "Probeer de fuzzy search aan te passen of filters te verwijderen.",
 
+    "dialect.ALL": "Alle dialecten",
+    "dialect.A": "Achmimisch",
+    "dialect.B": "Bohairisch",
+    "dialect.F": "Fayyumisch",
+    "dialect.Fb": "Fayyumisch met Bohairische tendensen",
+    "dialect.L": "Lycopolitaans",
+    "dialect.La": "Sahidisch met Lycopolitaanse tendensen",
+    "dialect.O": "Oudkoptisch",
+    "dialect.S": "Sahidisch",
+    "dialect.Sa": "Sahidisch met Achmimische tendensen",
+    "dialect.Sf": "Sahidisch met Fayyumische tendensen",
+
+    "entry.back": "Terug naar woordenboek",
+    "entry.badge": "Woordenboeklemma",
+    "entry.gender": "Geslacht",
+    "entry.translation": "Vertaling",
+    "entry.greekEquivalents": "Griekse equivalenten",
+    "entry.dialectForms": "Dialectvormen",
+
+    "analytics.back": "Terug naar woordenboek",
+    "analytics.filter": "Analytics filteren",
+    "analytics.title": "Woordenboekstatistieken",
+    "analytics.totalRoots": "Totaal aantal roots",
+    "analytics.meaningUnknown": "Betekenis onbekend",
+    "analytics.meaningUncertain": "Betekenis onzeker",
+    "analytics.posBreakdown": "Verdeling van woordsoorten",
+    "analytics.nounGenders": "Geslachten van zelfstandige naamwoorden",
+    "analytics.total": "Totaal",
+    "analytics.verbalNouns": "Verbale zelfstandige naamwoorden (alle werkwoorden)",
+    "analytics.totalMasculine": "Totaal mannelijk concept",
+
     "grammar.title": "Koptische Grammatica",
     "grammar.subtitle": "Interactieve lessen en oefeningen om de Koptische taal te beheersen.",
     "grammar.lessonBadge": "Les",
@@ -170,6 +250,16 @@ const translations = {
     "grammar.lesson1.desc": "Beheers de basis van Koptische zelfstandige naamwoorden, determinatoren en onafhankelijke persoonlijke voornaamwoorden.",
     "grammar.lesson2.title": "Les 02",
     "grammar.lesson2.desc": "Duik in werkwoordelijke voorvoegsels, bijvoeglijke naamwoorden en het construeren van complexe nominale zinnen.",
+
+    "exercise.authUnavailable": "Het indienen van oefeningen via login is tijdelijk niet beschikbaar.",
+    "exercise.loginPrompt": "Log in om je antwoorden te typen en persoonlijke feedback te ontvangen.",
+    "exercise.loginCta": "Log in om te oefenen",
+    "exercise.submittedTitle": "Vertalingen verzonden!",
+    "exercise.submittedBody": "Je antwoorden zijn veilig opgeslagen. Kyrillos zal ze binnenkort nakijken.",
+    "exercise.viewDashboard": "Mijn dashboard bekijken",
+    "exercise.answerPlaceholder": "Typ hier je vertaling...",
+    "exercise.submitting": "Veilig verzenden...",
+    "exercise.submit": "Vertalingen verzenden",
 
     "contact.title": "Neem Contact Op",
     "contact.subtitle":
@@ -248,10 +338,6 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
 
     return langDict[key] || fallbackDict[key] || key;
   };
-
-  // Prevent hydration errors by not rendering children immediately if they rely on text,
-  // but for SEO and context, we can just return children anyway and let client re-hydrate text.
-  // Actually, standard context rendering is fine since we default to "en" for SSR.
 
   return (
     <LanguageContext.Provider value={{ language, setLanguage, t }}>
