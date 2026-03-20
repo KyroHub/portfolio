@@ -1,15 +1,20 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { fileURLToPath } from 'url';
-import type { DialectForms, LexicalEntry } from '../src/lib/dictionaryTypes.ts';
+import type {
+  DialectForms,
+  LexicalEntry,
+  LexicalGender,
+} from '../src/lib/dictionaryTypes.ts';
+import type { PartOfSpeech } from '../src/features/dictionary/config.ts';
 import { normalizeDialectKey } from '../src/lib/dialects.ts';
 
 export interface LegacyLexicalEntry {
   id: string;
   headword: string;
   dialects: Record<string, string>;
-  pos: string;
-  gender: string;
+  pos: PartOfSpeech;
+  gender: LexicalGender;
   english_meanings: string[];
   greek_equivalents: string[];
   raw: {
@@ -22,6 +27,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 function extractDialectsAndHeadword(wordRaw: string): { headword: string, dialects: Record<string, DialectForms> } {
+  // Legacy JSON stores the original raw word block, so we rebuild the typed
+  // dialect buckets from that source text instead of trusting older shapes.
   const lines = wordRaw.split('\n');
   const dialectsObj: Record<string, DialectForms> = {};
   let primaryHeadword = '';
@@ -34,7 +41,6 @@ function extractDialectsAndHeadword(wordRaw: string): { headword: string, dialec
       
       wordTokens = wordTokens.replace(/\{.*?\}/g, '').trim();
 
-      // We only take the first explicit token string for the state
       let form = wordTokens.split(/,\s*/)[0].trim();
       if (!form) continue;
 
@@ -80,6 +86,8 @@ function main() {
     const rawData = fs.readFileSync(dictionaryPath, "utf8");
     const legacyEntries: LegacyLexicalEntry[] = JSON.parse(rawData);
 
+    // Re-derive headwords and dialect forms so both dictionaries follow the
+    // same parsing rules as the current import pipeline.
     const newEntries: LexicalEntry[] = legacyEntries.map((entry) => {
       const { headword, dialects } = extractDialectsAndHeadword(entry.raw.word);
       return {

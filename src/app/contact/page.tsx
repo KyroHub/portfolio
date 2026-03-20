@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import ContactPageClient from "@/components/ContactPageClient";
+import ContactPageClient from "@/features/contact/components/ContactPageClient";
 import { createPageMetadata } from "@/lib/metadata";
 
 export const metadata: Metadata = createPageMetadata({

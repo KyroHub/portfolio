@@ -1,342 +1,53 @@
 "use client";
 
-import React, { createContext, startTransition, useContext, useEffect, useState } from "react";
-
-type Language = "en" | "nl";
+import { createContext, startTransition, useContext, useEffect, useState, type ReactNode } from "react";
+import {
+  DEFAULT_LANGUAGE,
+  LANGUAGE_STORAGE_KEY,
+  getTranslation,
+  isLanguage,
+  type TranslationKey,
+} from "@/lib/i18n";
+import type { Language } from "@/types/i18n";
 
 interface LanguageContextType {
   language: Language;
   setLanguage: (lang: Language) => void;
-  // A helper function to get translations
-  t: (key: string) => string;
+  t: (key: TranslationKey) => string;
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
-// A simple dictionary for UI strings
-const translations = {
-  en: {
-    "lang.toggle": "Toggle language",
-    "lang.switchToDutch": "Switch to Dutch",
-    "lang.switchToEnglish": "Switch to English",
-
-    "nav.home": "Home",
-    "nav.publications": "Publications",
-    "nav.dictionary": "Dictionary",
-    "nav.grammar": "Grammar",
-    "nav.contact": "Contact",
-    "nav.analytics": "Analytics Dashboard",
-    "nav.login": "Log In",
-    "nav.dashboard": "Dashboard",
-    "footer.rights": "All rights reserved.",
-
-    "home.eyebrow": "Academic Portfolio and Coptic Research Tools",
-    "home.title": "Wannes Portfolio",
-    "home.subtitle": "Explore my publications and interactive scholarly applications.",
-    "home.publications": "My Publications",
-    "home.publications.desc": "A curated collection of my academic works and ongoing research.",
-    "home.publications.cta": "Explore publications",
-    "home.comingSoon": "Coming Soon",
-    "home.app.title": "Coptic Learner",
-    "home.app.desc": "Learn Coptic grammar and vocabulary on the go with interactive, Duolingo-style bite-sized lessons, intelligent search, and native integration for iPhone and iPad.",
-    "home.app.focus": "Planned focus areas",
-    "home.app.focusItem1": "Interactive exercises with instructor review",
-    "home.app.focusItem2": "Structured lesson progression for learners",
-    "home.app.focusItem3": "Research-informed study tools built around Coptic",
-    "home.copticDict": "Coptic Dictionary",
-    "home.copticDict.desc": "A lightning-fast digital lexicon explicitly designed for beginner students and linguists alike.",
-    "home.dictionary.cta": "Open dictionary",
-    "home.grammar.cta": "Begin studying",
-
-    "dict.title": "Coptic Dictionary",
-    "dict.subtitle": "A lightning-fast digital lexicon explicitly designed for beginner students and linguists alike.",
-    "dict.searchPlaceholder": "Search in Coptic, English, or Greek...",
-    "dict.pos": "Part of Speech:",
-    "dict.dialect": "Dialect:",
-    "dict.any": "Any",
-    "dict.verb": "Verb",
-    "dict.noun": "Noun",
-    "dict.adj": "Adjective",
-    "dict.adv": "Adverb",
-    "dict.prep": "Preposition",
-    "dict.showing": "Showing",
-    "dict.outOf": "out of",
-    "dict.entries": "entries...",
-    "dict.found": "Found",
-    "dict.results": "result(s)",
-    "dict.noMatch": "No distinct forms match your query.",
-    "dict.tryFuzzy": "Try adjusting the fuzzy search or removing filters.",
-
-    "dialect.ALL": "All dialects",
-    "dialect.A": "Akhmimic",
-    "dialect.B": "Bohairic",
-    "dialect.F": "Fayyumic",
-    "dialect.Fb": "Fayyumic with Bohairic tendencies",
-    "dialect.L": "Lycopolitan",
-    "dialect.La": "Sahidic with Lycopolitan tendencies",
-    "dialect.O": "Old Coptic",
-    "dialect.S": "Sahidic",
-    "dialect.Sa": "Sahidic with Akhmimic tendencies",
-    "dialect.Sf": "Sahidic with Fayyumic tendencies",
-
-    "entry.back": "Back to Dictionary Search",
-    "entry.badge": "Dictionary Entry",
-    "entry.gender": "Gender",
-    "entry.translation": "Translation",
-    "entry.greekEquivalents": "Greek Equivalents",
-    "entry.dialectForms": "Dialect Forms",
-
-    "analytics.back": "Back to Dictionary Search",
-    "analytics.filter": "Filter Analytics",
-    "analytics.title": "Dictionary Analytics",
-    "analytics.totalRoots": "Total Roots",
-    "analytics.meaningUnknown": "Meaning Unknown",
-    "analytics.meaningUncertain": "Meaning Uncertain",
-    "analytics.posBreakdown": "Part of Speech Breakdown",
-    "analytics.nounGenders": "Noun Genders",
-    "analytics.total": "Total",
-    "analytics.verbalNouns": "Verbal Nouns (All Verbs)",
-    "analytics.totalMasculine": "Total Masculine Concept",
-
-    "grammar.title": "Coptic Grammar",
-    "grammar.subtitle": "Interactive lessons and exercises to master the Coptic language.",
-    "grammar.lessonBadge": "Lesson",
-    "grammar.openLesson": "Open lesson",
-    "grammar.inPreparation": "In preparation",
-    "grammar.back": "Back to Grammar",
-    "grammar.lesson1.title": "Lesson 01",
-    "grammar.lesson1.desc": "Master the basics of Coptic nouns, determiners, and independent personal pronouns.",
-    "grammar.lesson2.title": "Lesson 02",
-    "grammar.lesson2.desc": "Dive into verbal prefixes, adjectives, and constructing complex nominal sentences.",
-
-    "exercise.authUnavailable": "Login-based exercise submission is temporarily unavailable.",
-    "exercise.loginPrompt": "Log in to type your answers and receive personalized feedback.",
-    "exercise.loginCta": "Log In to Practice",
-    "exercise.submittedTitle": "Translations Submitted!",
-    "exercise.submittedBody": "Your answers have been securely saved. Kyrillos will review them shortly.",
-    "exercise.viewDashboard": "View My Dashboard",
-    "exercise.answerPlaceholder": "Type your translation here...",
-    "exercise.submitting": "Submitting securely...",
-    "exercise.submit": "Submit Translations",
-
-    "contact.title": "Get in Touch",
-    "contact.subtitle":
-      "Academic inquiries, dictionary feedback, grammar questions, or just to say hello. I'd love to hear from you.",
-    "contact.name": "Full Name",
-    "contact.email": "Email Address",
-    "contact.inquiry": "Type of Inquiry",
-    "contact.select": "Select one...",
-    "contact.message": "Message",
-    "contact.namePlaceholder": "First name Last name",
-    "contact.emailPlaceholder": "you@email.com",
-    "contact.messagePlaceholder":
-      "Hi Kyrillos, I really enjoyed your Coptic dictionary and had a question about...",
-    "contact.send": "Send Message",
-    "contact.sending": "Sending...",
-    "contact.success": "Message sent successfully. I'll reply soon!",
-    "contact.option.dictionary": "Dictionary Feedback",
-    "contact.option.grammar": "Grammar / Linguistics Question",
-    "contact.option.research": "Research Collaboration",
-    "contact.option.publication": "Publication / Book Inquiry",
-    "contact.option.general": "General Message",
-    "login.title": "Welcome to Wannes Portfolio",
-    "login.subtitle": "Sign in to save exercises, receive feedback, and continue your Coptic studies.",
-    "login.email": "Email Address",
-    "login.emailPlaceholder": "you@email.com",
-    "login.password": "Password",
-    "login.passwordPlaceholder": "••••••••",
-    "login.signIn": "Sign In",
-    "login.createAccount": "Create an Account",
-    "login.notice.authUnavailable": "Authentication is temporarily unavailable. Please try again later.",
-    "login.notice.loginInvalidInput": "Enter a valid email address and password.",
-    "login.notice.loginError": "Could not authenticate user. Check your email and password and try again.",
-    "login.notice.loginRateLimited": "Too many sign-in attempts. Please wait a few minutes and try again.",
-    "login.notice.signupCheckEmail": "Account created. Please confirm your email address using the message we sent, then sign in with the same email and password.",
-    "login.notice.signupConfirmed": "Your email has been confirmed. You can now sign in with the same email and password.",
-    "login.notice.signupError": "Could not create your account. If you already signed up, try signing in instead.",
-    "login.notice.signupInvalidInput": "Use a valid email address and a password with at least 8 characters.",
-    "login.notice.signupRateLimited": "Too many account creation attempts. Please try again later.",
-  },
-  nl: {
-    "lang.toggle": "Taal wisselen",
-    "lang.switchToDutch": "Overschakelen naar het Nederlands",
-    "lang.switchToEnglish": "Overschakelen naar het Engels",
-
-    "nav.home": "Thuis",
-    "nav.publications": "Publicaties",
-    "nav.dictionary": "Woordenboek",
-    "nav.grammar": "Grammatica",
-    "nav.contact": "Contact",
-    "nav.analytics": "Analytics-dashboard",
-    "nav.login": "Inloggen",
-    "nav.dashboard": "Dashboard",
-    "footer.rights": "Alle rechten voorbehouden.",
-
-    "home.eyebrow": "Academisch portfolio en Koptische onderzoekstools",
-    "home.title": "Wannes Portfolio",
-    "home.subtitle": "Verken mijn publicaties en interactieve academische toepassingen.",
-    "home.publications": "Mijn Publicaties",
-    "home.publications.desc": "Een zorgvuldig samengestelde verzameling van mijn academische werken en lopend onderzoek.",
-    "home.publications.cta": "Bekijk publicaties",
-    "home.comingSoon": "Binnenkort Beschikbaar",
-    "home.app.title": "Coptic Learner",
-    "home.app.desc": "Leer Koptische grammatica en woordenschat onderweg met interactieve, Duolingo-achtige stapsgewijze lessen, intelligente zoekfuncties en native integratie voor iPhone en iPad.",
-    "home.app.focus": "Geplande onderdelen",
-    "home.app.focusItem1": "Interactieve oefeningen met docentfeedback",
-    "home.app.focusItem2": "Gestructureerde lesopbouw voor studenten",
-    "home.app.focusItem3": "Onderzoeksgedreven studietools rond het Koptisch",
-    "home.copticDict": "Koptisch Woordenboek",
-    "home.copticDict.desc": "Een bliksemsnel digitaal lexicon expliciet ontworpen voor zowel beginnende studenten als taalkundigen.",
-    "home.dictionary.cta": "Open woordenboek",
-    "home.grammar.cta": "Begin met studeren",
-
-    "dict.title": "Koptisch Woordenboek",
-    "dict.subtitle": "Een bliksemsnel digitaal lexicon expliciet ontworpen voor zowel beginnende studenten als taalkundigen.",
-    "dict.searchPlaceholder": "Zoek in het Koptisch, Engels of Grieks...",
-    "dict.pos": "Woordsoort:",
-    "dict.dialect": "Dialect:",
-    "dict.any": "Alles",
-    "dict.verb": "Werkwoord",
-    "dict.noun": "Zelfstandig Naamwoord",
-    "dict.adj": "Bijvoeglijk Naamwoord",
-    "dict.adv": "Bijwoord",
-    "dict.prep": "Voorzetsel",
-    "dict.showing": "Toont",
-    "dict.outOf": "van de",
-    "dict.entries": "lemma's...",
-    "dict.found": "Gevonden:",
-    "dict.results": "resulta(a)t(en)",
-    "dict.noMatch": "Geen unieke vormen komen overeen met uw zoekopdracht.",
-    "dict.tryFuzzy": "Probeer de fuzzy search aan te passen of filters te verwijderen.",
-
-    "dialect.ALL": "Alle dialecten",
-    "dialect.A": "Achmimisch",
-    "dialect.B": "Bohairisch",
-    "dialect.F": "Fayyumisch",
-    "dialect.Fb": "Fayyumisch met Bohairische tendensen",
-    "dialect.L": "Lycopolitaans",
-    "dialect.La": "Sahidisch met Lycopolitaanse tendensen",
-    "dialect.O": "Oudkoptisch",
-    "dialect.S": "Sahidisch",
-    "dialect.Sa": "Sahidisch met Achmimische tendensen",
-    "dialect.Sf": "Sahidisch met Fayyumische tendensen",
-
-    "entry.back": "Terug naar woordenboek",
-    "entry.badge": "Woordenboeklemma",
-    "entry.gender": "Geslacht",
-    "entry.translation": "Vertaling",
-    "entry.greekEquivalents": "Griekse equivalenten",
-    "entry.dialectForms": "Dialectvormen",
-
-    "analytics.back": "Terug naar woordenboek",
-    "analytics.filter": "Analytics filteren",
-    "analytics.title": "Woordenboekstatistieken",
-    "analytics.totalRoots": "Totaal aantal roots",
-    "analytics.meaningUnknown": "Betekenis onbekend",
-    "analytics.meaningUncertain": "Betekenis onzeker",
-    "analytics.posBreakdown": "Verdeling van woordsoorten",
-    "analytics.nounGenders": "Geslachten van zelfstandige naamwoorden",
-    "analytics.total": "Totaal",
-    "analytics.verbalNouns": "Verbale zelfstandige naamwoorden (alle werkwoorden)",
-    "analytics.totalMasculine": "Totaal mannelijk concept",
-
-    "grammar.title": "Koptische Grammatica",
-    "grammar.subtitle": "Interactieve lessen en oefeningen om de Koptische taal te beheersen.",
-    "grammar.lessonBadge": "Les",
-    "grammar.openLesson": "Open les",
-    "grammar.inPreparation": "In voorbereiding",
-    "grammar.back": "Terug naar grammatica",
-    "grammar.lesson1.title": "Les 01",
-    "grammar.lesson1.desc": "Beheers de basis van Koptische zelfstandige naamwoorden, determinatoren en onafhankelijke persoonlijke voornaamwoorden.",
-    "grammar.lesson2.title": "Les 02",
-    "grammar.lesson2.desc": "Duik in werkwoordelijke voorvoegsels, bijvoeglijke naamwoorden en het construeren van complexe nominale zinnen.",
-
-    "exercise.authUnavailable": "Het indienen van oefeningen via login is tijdelijk niet beschikbaar.",
-    "exercise.loginPrompt": "Log in om je antwoorden te typen en persoonlijke feedback te ontvangen.",
-    "exercise.loginCta": "Log in om te oefenen",
-    "exercise.submittedTitle": "Vertalingen verzonden!",
-    "exercise.submittedBody": "Je antwoorden zijn veilig opgeslagen. Kyrillos zal ze binnenkort nakijken.",
-    "exercise.viewDashboard": "Mijn dashboard bekijken",
-    "exercise.answerPlaceholder": "Typ hier je vertaling...",
-    "exercise.submitting": "Veilig verzenden...",
-    "exercise.submit": "Vertalingen verzenden",
-
-    "contact.title": "Neem Contact Op",
-    "contact.subtitle":
-      "Academische vragen, feedback over het woordenboek, grammaticale kwesties, of gewoon een vriendelijk bericht. Ik hoor graag van je.",
-    "contact.name": "Volledige Naam",
-    "contact.email": "E-mailadres",
-    "contact.inquiry": "Type Vraag",
-    "contact.select": "Selecteer een optie...",
-    "contact.message": "Bericht",
-    "contact.namePlaceholder": "Voornaam Achternaam",
-    "contact.emailPlaceholder": "jij@email.com",
-    "contact.messagePlaceholder":
-      "Dag Kyrillos, ik vond je Koptische woordenboek erg waardevol en had een vraag over...",
-    "contact.send": "Verstuur Bericht",
-    "contact.sending": "Verzenden...",
-    "contact.success": "Bericht succesvol verzonden. Ik antwoord binnenkort!",
-    "contact.option.dictionary": "Feedback over het woordenboek",
-    "contact.option.grammar": "Vraag over grammatica / linguistiek",
-    "contact.option.research": "Onderzoekssamenwerking",
-    "contact.option.publication": "Vraag over publicatie / boek",
-    "contact.option.general": "Algemeen bericht",
-    "login.title": "Welkom bij Wannes Portfolio",
-    "login.subtitle": "Log in om oefeningen op te slaan, feedback te ontvangen en je Koptische studie voort te zetten.",
-    "login.email": "E-mailadres",
-    "login.emailPlaceholder": "jij@email.com",
-    "login.password": "Wachtwoord",
-    "login.passwordPlaceholder": "••••••••",
-    "login.signIn": "Inloggen",
-    "login.createAccount": "Account aanmaken",
-    "login.notice.authUnavailable": "Authenticatie is tijdelijk niet beschikbaar. Probeer het later opnieuw.",
-    "login.notice.loginInvalidInput": "Voer een geldig e-mailadres en wachtwoord in.",
-    "login.notice.loginError": "Inloggen is niet gelukt. Controleer je e-mailadres en wachtwoord en probeer het opnieuw.",
-    "login.notice.loginRateLimited": "Te veel inlogpogingen. Wacht een paar minuten en probeer het opnieuw.",
-    "login.notice.signupCheckEmail": "Account aangemaakt. Bevestig eerst je e-mailadres via de e-mail die we hebben gestuurd en log daarna in met hetzelfde e-mailadres en wachtwoord.",
-    "login.notice.signupConfirmed": "Je e-mailadres is bevestigd. Je kunt nu inloggen met hetzelfde e-mailadres en wachtwoord.",
-    "login.notice.signupError": "Je account kon niet worden aangemaakt. Als je al geregistreerd bent, probeer dan in te loggen.",
-    "login.notice.signupInvalidInput": "Gebruik een geldig e-mailadres en een wachtwoord van minstens 8 tekens.",
-    "login.notice.signupRateLimited": "Te veel pogingen om een account aan te maken. Probeer het later opnieuw.",
-  }
-};
-
-export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const [language, setLanguageState] = useState<Language>("en");
+export function LanguageProvider({ children }: { children: ReactNode }) {
+  const [language, setLanguageState] = useState<Language>(DEFAULT_LANGUAGE);
 
   useEffect(() => {
-    // Determine initial language from localStorage or User's OS setting
-    const storedLang = localStorage.getItem("app-language") as Language | null;
-    if (storedLang === "en" || storedLang === "nl") {
+    const storedLanguage = localStorage.getItem(LANGUAGE_STORAGE_KEY);
+    if (storedLanguage && isLanguage(storedLanguage)) {
       startTransition(() => {
-        setLanguageState(storedLang);
+        setLanguageState(storedLanguage);
       });
     } else {
-      const userLang = navigator.language.toLowerCase();
-      if (userLang.startsWith("nl")) {
-        startTransition(() => {
-          setLanguageState("nl");
-        });
-        localStorage.setItem("app-language", "nl");
-      } else {
-        startTransition(() => {
-          setLanguageState("en");
-        });
-        localStorage.setItem("app-language", "en");
-      }
+      const preferredLanguage = navigator.language.toLowerCase().startsWith("nl")
+        ? "nl"
+        : DEFAULT_LANGUAGE;
+
+      startTransition(() => {
+        setLanguageState(preferredLanguage);
+      });
+      localStorage.setItem(LANGUAGE_STORAGE_KEY, preferredLanguage);
     }
   }, []);
 
   const setLanguage = (lang: Language) => {
-    setLanguageState(lang);
-    localStorage.setItem("app-language", lang);
+    startTransition(() => {
+      setLanguageState(lang);
+    });
+    localStorage.setItem(LANGUAGE_STORAGE_KEY, lang);
   };
 
-  const t = (key: string): string => {
-    const langDict = translations[language] as Record<string, string>;
-    const fallbackDict = translations["en"] as Record<string, string>;
-
-    return langDict[key] || fallbackDict[key] || key;
+  const t = (key: TranslationKey): string => {
+    return getTranslation(language, key);
   };
 
   return (

@@ -192,4 +192,8 @@
     font-family: var(--font-coptic, "Antinoou"), serif;
     text-rendering: optimizeLegibility;
   }
+
+  .small-caps {
+    font-variant: small-caps;
+  }
 }

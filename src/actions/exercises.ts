@@ -10,13 +10,14 @@ import { revalidatePath } from 'next/cache'
 import {
   getLessonExerciseDefinition,
   isExerciseLanguage,
-} from '@/lib/lessonExercises'
+} from '@/features/grammar/lib/lessonExercises'
 import {
   getFormString,
   hasLengthInRange,
   normalizeMultiline,
   normalizeWhitespace,
 } from '@/lib/validation'
+import type { SubmissionInsert } from '@/features/submissions/types'
 
 export type ExerciseActionState =
   | {
@@ -97,16 +98,16 @@ export async function submitExercise(_prevState: ExerciseActionState, formData: 
     .map(({ prompt, answer }) => `Question: ${prompt}\nAnswer: ${answer}`)
     .join('\n\n')
 
+  const submission: SubmissionInsert = {
+    user_id: user.id,
+    lesson_slug: lessonSlug,
+    submitted_text: submittedText.trim(),
+    status: 'pending',
+  }
+
   const { error } = await supabase
     .from('submissions')
-    .insert([
-      {
-        user_id: user.id,
-        lesson_slug: lessonSlug,
-        submitted_text: submittedText.trim(),
-        status: 'pending',
-      }
-    ])
+    .insert([submission])
 
   if (error) {
     console.error('Error submitting exercise:', {

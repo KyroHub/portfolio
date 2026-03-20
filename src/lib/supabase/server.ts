@@ -1,6 +1,7 @@
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 import { getSupabaseRuntimeEnv } from '@/lib/supabase/config'
+import type { Database } from '@/types/supabase'
 
 export async function createClient() {
   const env = getSupabaseRuntimeEnv()
@@ -10,7 +11,7 @@ export async function createClient() {
 
   const cookieStore = await cookies()
 
-  return createServerClient(
+  return createServerClient<Database>(
     env.url,
     env.anonKey,
     {
@@ -24,9 +25,8 @@ export async function createClient() {
               cookieStore.set(name, value, options)
             )
           } catch {
-            // The `setAll` method was called from a Server Component.
-            // This can be ignored if you have middleware refreshing
-            // user sessions.
+            // Server Components may reject cookie writes, so the proxy layer is
+            // responsible for refreshing the session on those requests instead.
           }
         },
       },

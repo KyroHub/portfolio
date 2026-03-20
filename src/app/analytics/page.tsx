@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import AnalyticsPageClient from "@/components/AnalyticsPageClient";
-import { createAnalyticsSnapshots } from "@/lib/analytics";
-import { getDictionary } from "@/lib/dictionary";
+import AnalyticsPageClient from "@/features/analytics/components/AnalyticsPageClient";
+import { createAnalyticsSnapshots } from "@/features/analytics/lib/analytics";
+import { getDictionary } from "@/features/dictionary/lib/dictionary";
 import { createPageMetadata } from "@/lib/metadata";
 
 export const metadata: Metadata = createPageMetadata({

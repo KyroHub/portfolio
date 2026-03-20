@@ -1,9 +1,10 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import DictionaryEntryCard from '@/components/DictionaryEntry';
-import EntryPageHeader from '@/components/EntryPageHeader';
+import DictionaryEntryCard from '@/features/dictionary/components/DictionaryEntry';
+import EntryPageHeader from '@/features/dictionary/components/EntryPageHeader';
+import { PageShell, pageShellAccents } from '@/components/PageShell';
 import StructuredData from '@/components/StructuredData';
-import { getDictionary } from '@/lib/dictionary';
+import { getDictionary } from '@/features/dictionary/lib/dictionary';
 import { buildPageTitle, siteConfig } from '@/lib/site';
 import {
   buildEntryDescription,
@@ -11,7 +12,8 @@ import {
   toPlainText,
 } from '@/lib/structuredData';
 
-// Generate static params so the pages are pre-rendered at build time
+// Dictionary entries are fully pre-rendered so lookups stay fast and every
+// entry gets stable SEO metadata at build time.
 export async function generateStaticParams() {
   const dictionary = getDictionary();
   return dictionary.map(entry => ({
@@ -69,17 +71,18 @@ export default async function EntryPage({ params }: { params: Promise<{ id: stri
   }
 
   return (
-    <main className="min-h-screen relative overflow-hidden pb-20 pt-16 px-6">
+    <PageShell
+      className="min-h-screen px-6 pb-20 pt-16"
+      contentClassName="max-w-4xl mx-auto"
+      accents={[
+        pageShellAccents.heroSkyArc,
+        pageShellAccents.topRightEmeraldOrbOffset,
+      ]}
+    >
       <StructuredData data={createDefinedTermStructuredData(entry)} />
-      
-      <div className="absolute top-0 left-0 w-full h-[520px] bg-sky-500/10 dark:bg-sky-900/10 rounded-b-full blur-[120px] -z-10 pointer-events-none" />
-      <div className="absolute top-28 right-[-10%] w-[440px] h-[440px] bg-emerald-500/10 dark:bg-emerald-900/10 rounded-full blur-[100px] -z-10 pointer-events-none" />
 
-      <div className="max-w-4xl mx-auto">
-        <EntryPageHeader />
-        
-        <DictionaryEntryCard entry={entry} headingLevel="h1" linkHeadword={false} />
-      </div>
-    </main>
+      <EntryPageHeader />
+      <DictionaryEntryCard entry={entry} headingLevel="h1" linkHeadword={false} />
+    </PageShell>
   );
 }

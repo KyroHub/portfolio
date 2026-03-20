@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { getDictionary } from "@/lib/dictionary";
+import { getDictionary } from "@/features/dictionary/lib/dictionary";
 import { siteConfig } from "@/lib/site";
 
 const staticRoutes = [

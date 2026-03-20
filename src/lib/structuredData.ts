@@ -1,5 +1,5 @@
-import type { LexicalEntry } from "@/lib/dictionaryTypes";
-import { Publication } from "@/lib/publications";
+import type { LexicalEntry } from "@/features/dictionary/types";
+import type { Publication } from "@/features/publications/lib/publications";
 import { siteConfig } from "@/lib/site";
 
 type JsonLd = Record<string, unknown>;
@@ -67,6 +67,8 @@ export function toPlainText(value: string) {
 }
 
 function stripLeadIn(value: string) {
+  // Imported meanings often start with grammar shorthand such as "tr" or
+  // "nn"; strip those prefixes so metadata surfaces a real gloss.
   let cleaned = toPlainText(value.replace(/\[[^\]]+\]/g, ""))
     .replace(/^[|―—–-]+\s*/, "")
     .trim();
@@ -208,6 +210,8 @@ export function createDictionaryPageStructuredData(): JsonLd[] {
 
 export function createDefinedTermStructuredData(entry: LexicalEntry): JsonLd {
   const headword = toPlainText(entry.headword);
+  // Search engines benefit from seeing every distinct dialect spelling as an
+  // alternate label for the same lexical entry.
   const alternateNames = Array.from(
     new Set(
       Object.values(entry.dialects)

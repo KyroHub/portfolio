@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import StructuredData from "@/components/StructuredData";
-import PublicationsPageClient from "@/components/PublicationsPageClient";
+import PublicationsPageClient from "@/features/publications/components/PublicationsPageClient";
+import { publications } from "@/features/publications/lib/publications";
 import { createPageMetadata } from "@/lib/metadata";
-import { publications } from "@/lib/publications";
 import { createPublicationsStructuredData } from "@/lib/structuredData";
 
 export const metadata: Metadata = createPageMetadata({

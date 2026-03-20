@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import StructuredData from "@/components/StructuredData";
-import DictionaryPageClient from "@/components/DictionaryPageClient";
+import DictionaryPageClient from "@/features/dictionary/components/DictionaryPageClient";
 import { createPageMetadata } from "@/lib/metadata";
 import { createDictionaryPageStructuredData } from "@/lib/structuredData";
 

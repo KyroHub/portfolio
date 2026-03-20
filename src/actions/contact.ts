@@ -1,7 +1,10 @@
 "use server";
 
 import { Resend } from "resend";
-import { getContactInquiryLabel, isContactInquiryValue } from "@/lib/contact";
+import {
+  getContactInquiryLabel,
+  isContactInquiryValue,
+} from "@/features/contact/lib/contact";
 import {
   consumeRateLimit,
   getClientRateLimitIdentifier,

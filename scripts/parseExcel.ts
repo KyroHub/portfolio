@@ -2,7 +2,12 @@ import XLSX from 'xlsx';
 import * as fs from 'fs';
 import * as path from 'path';
 import { fileURLToPath } from 'url';
-import type { DialectForms, LexicalEntry } from '../src/lib/dictionaryTypes.ts';
+import type {
+  DialectForms,
+  LexicalEntry,
+  LexicalGender,
+} from '../src/lib/dictionaryTypes.ts';
+import type { PartOfSpeech } from '../src/features/dictionary/config.ts';
 import { normalizeDialectKey } from '../src/lib/dialects.ts';
 
 interface WordData {
@@ -10,8 +15,9 @@ interface WordData {
   meaning: string;
 }
 
-// Reuse logic from data-analysis.ts
-function classifyPOS(meaning: string): string {
+// The source spreadsheet encodes part-of-speech shorthand at the start of the
+// meaning field, so we infer the typed enum from those recurring prefixes.
+function classifyPOS(meaning: string): PartOfSpeech {
   const m = meaning.trim().toLowerCase();
   if (!m || m.startsWith("meaning unknown") || m.startsWith("nn(?), meaning unknown")) return "UNKNOWN";
   if (m.startsWith("intr") || m.startsWith("tr") || m.startsWith("impers vb") || m.startsWith("impers") || m.startsWith("qual")) return "V";
@@ -26,19 +32,21 @@ function classifyPOS(meaning: string): string {
   return "N";
 }
 
-function classifyNounGender(meaning: string, pos: string): string {
+function classifyNounGender(
+  meaning: string,
+  pos: PartOfSpeech
+): LexicalGender {
   const raw = meaning.trim();
   const first = raw.split('\n')[0].trim();
   const lower = raw.toLowerCase();
   
-  let gender = '';
+  let gender: LexicalGender = '';
   if (/^f(\s|,|:|$)/.test(first)) gender = 'F';
   else if (/^m(\s|,|:|$)/.test(first)) gender = 'M';
   else if (/\bnn\s+f\b/.test(lower)) gender = 'F';
   else if (/\bnn\s+m\b/.test(lower)) gender = 'M';
   else if (/\bnn\b/.test(lower) && !/\bnn\s+[mf]\b/.test(lower)) gender = 'BOTH';
   
-  // Verbs used as nouns take masculine determination in Coptic natively
   if (pos === 'V' && gender === 'BOTH') {
     return 'M';
   }
@@ -53,7 +61,8 @@ function extractGreek(meaning: string): string[] {
 }
 
 function extractDialectsAndHeadword(wordRaw: string): { headword: string, dialects: Record<string, DialectForms> } {
-  // Typical line: "(S, A, sA) ⲟⲩⲁ(ⲉ)ⲓⲛⲉ"
+  // Each parenthesized line carries one or more dialect sigla followed by the
+  // form to store for that grammatical state.
   const lines = wordRaw.split('\n');
   const dialectsObj: Record<string, DialectForms> = {};
   let primaryHeadword = '';
@@ -63,11 +72,9 @@ function extractDialectsAndHeadword(wordRaw: string): { headword: string, dialec
     if (parentheticalMatch) {
       const dialectKeys = parentheticalMatch[1].split(',').map((d) => normalizeDialectKey(d));
       let wordTokens = parentheticalMatch[2].trim();
-      
-      // Strip out corpus ext references for the clean headword e.g. {ext codex...}
+
       wordTokens = wordTokens.replace(/\{.*?\}/g, '').trim();
 
-      // We'll take the first word listed for this block as the representative spelling
       let form = wordTokens.split(/,\s*/)[0].trim();
       if (!form) continue;
 
@@ -94,15 +101,12 @@ function extractDialectsAndHeadword(wordRaw: string): { headword: string, dialec
     }
   }
 
-  // If we couldn't parse properly, just taking the first word
   if (!primaryHeadword) {
     primaryHeadword = wordRaw.split('\n')[0].replace(/\{.*?\}/g, '').replace(/^\(.*?\)\s*/, '').split(',')[0].trim();
   }
 
   return { headword: primaryHeadword, dialects: dialectsObj };
 }
-
-import * as os from 'os';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -159,7 +163,6 @@ function main() {
   for (const item of rawData) {
     if (!item.word || !item.meaning) continue;
 
-    // HTML tags are now stripped during the initial data extraction
     const cleanWord = item.word.replace(/<[^>]+>/g, '');
     const cleanMeaningRaw = item.meaning.replace(/<[^>]+>/g, '');
 
@@ -167,8 +170,9 @@ function main() {
     const pos = classifyPOS(cleanMeaningRaw);
     const gender = classifyNounGender(cleanMeaningRaw, pos);
     const greek = extractGreek(cleanMeaningRaw);
-    
-    // Simple basic string cleanup
+
+    // Meaning lines stay split because downstream search and UI both rely on
+    // preserving gloss boundaries from the source spreadsheet.
     const cleanMeaningLines = cleanMeaningRaw
       .split('\n')
       .map(line => line.trim())
@@ -180,7 +184,7 @@ function main() {
       dialects,
       pos,
       gender,
-      english_meanings: cleanMeaningLines, // Keep all lines perfectly intact (including sub-meanings starting with ―)
+      english_meanings: cleanMeaningLines,
       greek_equivalents: greek,
       raw: {
         word: cleanWord,

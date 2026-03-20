@@ -11,6 +11,7 @@ import {
   normalizeWhitespace,
   parseBoundedInteger,
 } from '@/lib/validation'
+import type { SubmissionUpdate } from '@/features/submissions/types'
 
 export async function submitFeedback(formData: FormData) {
   if (!hasSupabaseRuntimeEnv()) {
@@ -42,9 +43,15 @@ export async function submitFeedback(formData: FormData) {
     return
   }
 
+  const updates: SubmissionUpdate = {
+    status: 'reviewed',
+    rating,
+    feedback_text: feedback,
+  }
+
   const { error } = await supabase
     .from('submissions')
-    .update({ status: 'reviewed', rating, feedback_text: feedback })
+    .update(updates)
     .eq('id', submissionId)
 
   if (error) {

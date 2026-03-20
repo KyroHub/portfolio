@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import GrammarHubPageClient from "@/components/GrammarHubPageClient";
+import GrammarHubPageClient from "@/features/grammar/components/GrammarHubPageClient";
 import { createPageMetadata } from "@/lib/metadata";
 
 export const metadata: Metadata = createPageMetadata({
