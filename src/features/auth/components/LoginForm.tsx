@@ -1,6 +1,6 @@
 "use client";
 
-import { login, signup } from "@/actions/auth";
+import { login, signup, signInWithGoogle } from "@/actions/auth";
 import type { TranslationKey } from "@/lib/i18n";
 import { FormField } from "@/components/FormField";
 import { useLanguage } from "@/components/LanguageProvider";
@@ -8,6 +8,8 @@ import { PageHeader } from "@/components/PageHeader";
 import { PageShell, pageShellAccents } from "@/components/PageShell";
 import { StatusNotice } from "@/components/StatusNotice";
 import { SurfacePanel } from "@/components/SurfacePanel";
+import Link from 'next/link';
+import { FaGoogle } from 'react-icons/fa';
 
 const NOTICE_TRANSLATION_KEYS = {
   "auth-unavailable": "login.notice.authUnavailable",
@@ -81,7 +83,14 @@ export function LoginForm({
                 />
               </FormField>
 
-              <FormField htmlFor="password" label={t("login.password")}>
+              <FormField htmlFor="password" label={
+                <div className="flex items-center justify-between w-full">
+                  <span>{t("login.password")}</span>
+                  <Link href="/forgot-password" className="text-xs text-brand-600 dark:text-brand-400 hover:underline">
+                    Forgot password?
+                  </Link>
+                </div>
+              }>
                 <input
                   id="password"
                   className="input-base"
@@ -106,6 +115,25 @@ export function LoginForm({
                   {t("login.createAccount")}
                 </button>
               </div>
+
+              <div className="relative py-2">
+                <div className="absolute inset-0 flex items-center">
+                  <span className="w-full border-t border-stone-200 dark:border-stone-800" />
+                </div>
+                <div className="relative flex justify-center text-xs uppercase">
+                  <span className="bg-white dark:bg-stone-900 px-2 text-stone-500">
+                    Or continue with
+                  </span>
+                </div>
+              </div>
+
+              <button
+                formAction={signInWithGoogle}
+                className="w-full flex items-center justify-center gap-3 rounded-xl border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 px-4 py-2.5 text-sm font-medium text-stone-700 dark:text-stone-300 hover:bg-stone-50 dark:hover:bg-stone-800 transition-colors shadow-sm"
+              >
+                <FaGoogle className="h-4 w-4 text-red-500" />
+                Sign in with Google
+              </button>
 
               {noticeMessage && (
                 <StatusNotice tone={noticeVariant}>

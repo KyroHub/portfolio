@@ -80,7 +80,7 @@ export async function submitExercise(_prevState: ExerciseActionState, formData: 
     }
   }
 
-  const exerciseRateLimit = consumeRateLimit({
+  const exerciseRateLimit = await consumeRateLimit({
     identifier: getUserRateLimitIdentifier(user.id),
     limit: 6,
     namespace: `exercise:${lessonSlug}`,

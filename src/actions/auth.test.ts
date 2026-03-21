@@ -52,12 +52,12 @@ async function loadAuthModule(options?: {
 
   const revalidatePathMock = vi.fn();
   const redirectMock = createRedirectMock();
-  const consumeRateLimitMock = vi.fn(() => ({
+  const consumeRateLimitMock = vi.fn().mockResolvedValue({
     ok: options?.rateLimitOk ?? true,
     remaining: 1,
     resetAt: Date.now() + 60_000,
     retryAfterMs: 60_000,
-  }));
+  });
   const getClientRateLimitIdentifierMock = vi.fn().mockResolvedValue("client-fingerprint");
   const getAuthUnavailableLoginPathMock = vi
     .fn((redirectTo?: string) =>

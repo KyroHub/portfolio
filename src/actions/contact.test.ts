@@ -42,12 +42,12 @@ async function loadContactModule(options?: {
     process.env.CONTACT_EMAIL = "owner@example.com";
   }
 
-  const consumeRateLimitMock = vi.fn(() => ({
+  const consumeRateLimitMock = vi.fn().mockResolvedValue({
     ok: options?.rateLimitOk ?? true,
     remaining: 1,
     resetAt: Date.now() + 60_000,
     retryAfterMs: 60_000,
-  }));
+  });
   const getClientRateLimitIdentifierMock = vi.fn().mockResolvedValue("client-fingerprint");
   const sendEmailMock = vi.fn().mockResolvedValue({ data: { id: "email_123" } });
 

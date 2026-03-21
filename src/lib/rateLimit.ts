@@ -1,5 +1,7 @@
 import { createHash } from "crypto";
 import { headers } from "next/headers";
+import { Ratelimit } from "@upstash/ratelimit";
+import { Redis } from "@upstash/redis";
 
 type RateLimitBucket = {
   count: number;
@@ -51,15 +53,50 @@ function pruneExpiredBuckets(now: number) {
   globalThis.__appRateLimitLastPruneAt = now;
 }
 
-export function consumeRateLimit({
+const redisUrl = process.env.UPSTASH_REDIS_REST_URL ?? process.env.KV_REST_API_URL;
+const redisToken = process.env.UPSTASH_REDIS_REST_TOKEN ?? process.env.KV_REST_API_TOKEN;
+
+const redis = redisUrl && redisToken ? new Redis({ url: redisUrl, token: redisToken }) : null;
+
+// Cache map for ratelimiters so we don't recreate them every request
+const upstashRateLimiters = new Map<string, Ratelimit>();
+const ratelimitCache = new Map<string, number>();
+
+export async function consumeRateLimit({
   identifier,
   limit,
   namespace,
   windowMs,
-}: RateLimitOptions): RateLimitResult {
+}: RateLimitOptions): Promise<RateLimitResult> {
   const now = Date.now();
-  pruneExpiredBuckets(now);
 
+  if (redis) {
+    // Upstash Ratelimit implementation
+    const cacheKey = `${namespace}-${limit}-${windowMs}`;
+    let upstashLimiter = upstashRateLimiters.get(cacheKey);
+
+    if (!upstashLimiter) {
+      // Create a fixed window limiter
+      upstashLimiter = new Ratelimit({
+        redis,
+        limiter: Ratelimit.fixedWindow(limit, `${windowMs} ms`),
+        ephemeralCache: ratelimitCache, 
+        prefix: `ratelimit:${namespace}`,
+      });
+      upstashRateLimiters.set(cacheKey, upstashLimiter);
+    }
+
+    const { success, remaining, reset } = await upstashLimiter.limit(identifier);
+    return {
+      ok: success,
+      remaining,
+      retryAfterMs: Math.max(reset - now, 0),
+      resetAt: reset,
+    };
+  }
+
+  // Fallback to in-memory implementation for local dev
+  pruneExpiredBuckets(now);
   const key = getStoreKey(namespace, identifier);
   const existingBucket = rateLimitStore.get(key);
   const activeBucket =

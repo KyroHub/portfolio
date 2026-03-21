@@ -45,12 +45,12 @@ async function loadExercisesModule(options?: {
   vi.resetModules();
 
   const revalidatePathMock = vi.fn();
-  const consumeRateLimitMock = vi.fn(() => ({
+  const consumeRateLimitMock = vi.fn().mockResolvedValue({
     ok: options?.rateLimitOk ?? true,
     remaining: 1,
     resetAt: Date.now() + 60_000,
     retryAfterMs: 60_000,
-  }));
+  });
   const getUserMock = vi.fn().mockResolvedValue({
     data: {
       user: options?.user === undefined ? { id: "user_123" } : options.user,

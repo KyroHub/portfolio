@@ -17,31 +17,15 @@ import {
   normalizeWhitespace,
 } from "@/lib/validation";
 
+import * as React from "react";
+import { ContactEmailTemplate } from "@/features/contact/components/ContactEmailTemplate";
+
 export type ContactFormState = {
   success: boolean;
   error?: string;
 };
 
 const resend = new Resend(process.env.RESEND_API_KEY);
-
-function escapeHtml(value: string) {
-  return value.replace(/[&<>"']/g, (char) => {
-    switch (char) {
-      case "&":
-        return "&amp;";
-      case "<":
-        return "&lt;";
-      case ">":
-        return "&gt;";
-      case '"':
-        return "&quot;";
-      case "'":
-        return "&#39;";
-      default:
-        return char;
-    }
-  });
-}
 
 export async function sendContactEmail(
   _prevState: ContactFormState | null,
@@ -74,7 +58,7 @@ export async function sendContactEmail(
   }
 
   const clientIdentifier = await getClientRateLimitIdentifier();
-  const contactRateLimit = consumeRateLimit({
+  const contactRateLimit = await consumeRateLimit({
     identifier: clientIdentifier,
     limit: 3,
     namespace: "contact",
@@ -96,13 +80,7 @@ export async function sendContactEmail(
       to: [process.env.CONTACT_EMAIL],
       replyTo: email,
       subject: `New Contact: ${inquiryLabel} from ${name}`,
-      html: `
-        <strong>Name:</strong> ${escapeHtml(name)}<br>
-        <strong>Email:</strong> ${escapeHtml(email)}<br>
-        <strong>Type:</strong> ${escapeHtml(inquiryLabel)}<br><br>
-        <strong>Message:</strong><br>
-        ${escapeHtml(message).replace(/\n/g, "<br>")}
-      `,
+      react: React.createElement(ContactEmailTemplate, { name, email, inquiryLabel, message }),
       text: `Name: ${name}\nEmail: ${email}\nType: ${inquiryLabel}\n\nMessage:\n${message}`,
     });
 
