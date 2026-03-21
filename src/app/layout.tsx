@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
-import { antinoou, inter } from "@/lib/fonts";
+import { antinoou } from "@/lib/fonts";
 import { getSiteUrl, siteConfig } from "@/lib/site";
 
 import { LanguageProvider } from "@/components/LanguageProvider";
@@ -63,7 +63,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.variable} ${antinoou.variable}`}>
+      <body className={antinoou.variable}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <LanguageProvider>
             <div className="flex flex-col min-h-screen">

@@ -26,6 +26,18 @@ const NOTICE_TRANSLATION_KEYS = {
 type NoticeState = keyof typeof NOTICE_TRANSLATION_KEYS;
 type NoticeType = "error" | "success" | "info";
 
+const NOTICE_VARIANTS = {
+  "auth-unavailable": "error",
+  "login-invalid-input": "error",
+  "login-error": "error",
+  "login-rate-limited": "error",
+  "signup-check-email": "success",
+  "signup-confirmed": "success",
+  "signup-error": "error",
+  "signup-invalid-input": "error",
+  "signup-rate-limited": "error",
+} as const satisfies Record<NoticeState, NoticeType>;
+
 export function LoginForm({
   message,
   messageType = "error",
@@ -43,7 +55,10 @@ export function LoginForm({
       ? NOTICE_TRANSLATION_KEYS[state as NoticeState]
       : undefined;
   const noticeMessage = noticeKey ? t(noticeKey) : message;
-  const noticeVariant = noticeKey ? "success" : messageType;
+  const noticeVariant =
+    state && state in NOTICE_VARIANTS
+      ? NOTICE_VARIANTS[state as NoticeState]
+      : messageType;
 
   return (
     <PageShell

@@ -25,8 +25,6 @@ export type ContactFormState = {
   error?: string;
 };
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 export async function sendContactEmail(
   _prevState: ContactFormState | null,
   formData: FormData
@@ -74,8 +72,9 @@ export async function sendContactEmail(
 
   try {
     const inquiryLabel = getContactInquiryLabel(inquiryType);
+    const resend = new Resend(process.env.RESEND_API_KEY);
 
-    await resend.emails.send({
+    const { error } = await resend.emails.send({
       from: "Kyrillos Wannes <contact@kyrilloswannes.com>",
       to: [process.env.CONTACT_EMAIL],
       replyTo: email,
@@ -83,6 +82,11 @@ export async function sendContactEmail(
       react: React.createElement(ContactEmailTemplate, { name, email, inquiryLabel, message }),
       text: `Name: ${name}\nEmail: ${email}\nType: ${inquiryLabel}\n\nMessage:\n${message}`,
     });
+
+    if (error) {
+      console.error("Failed to send contact email", error);
+      return { success: false, error: "Failed to send email" };
+    }
 
     return { success: true };
   } catch (error) {

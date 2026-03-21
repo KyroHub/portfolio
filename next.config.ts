@@ -15,6 +15,17 @@ function getSupabaseOrigin() {
 
 function buildContentSecurityPolicy() {
   const supabaseOrigin = getSupabaseOrigin();
+  const imgSrc = [
+    "'self'",
+    "data:",
+    "blob:",
+    supabaseOrigin,
+    "https://tools.applemediaservices.com",
+    "https://toolbox.marketingtools.apple.com",
+    "https://*.mzstatic.com",
+  ]
+    .filter(Boolean)
+    .join(" ");
   const connectSrc = ["'self'", supabaseOrigin].filter(Boolean).join(" ");
   const directives = [
     "default-src 'self'",
@@ -25,7 +36,7 @@ function buildContentSecurityPolicy() {
     "script-src 'self' 'unsafe-inline'",
     "style-src 'self' 'unsafe-inline'",
     "font-src 'self' data:",
-    "img-src 'self' data: blob: https://tools.applemediaservices.com https://toolbox.marketingtools.apple.com https://*.mzstatic.com",
+    `img-src ${imgSrc}`,
     `connect-src ${connectSrc}`,
     "worker-src 'self' blob:",
     "manifest-src 'self'",

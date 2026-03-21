@@ -25,21 +25,35 @@ export function ExerciseForm({
   const { t } = useLanguage();
   const [user, setUser] = useState<User | null>(null);
   const authAvailable = hasSupabaseEnv();
-  const supabase = createClient();
   const [loading, setLoading] = useState(authAvailable);
 
   const [state, formAction, isPending] = useActionState(submitExercise, null);
 
   useEffect(() => {
+    if (!authAvailable) {
+      return;
+    }
+
+    const supabase = createClient();
     if (!supabase) {
       return;
     }
 
-    supabase.auth.getUser().then(({ data }) => {
+    let isMounted = true;
+
+    void supabase.auth.getUser().then(({ data }) => {
+      if (!isMounted) {
+        return;
+      }
+
       setUser(data.user);
       setLoading(false);
     });
-  }, [supabase]);
+
+    return () => {
+      isMounted = false;
+    };
+  }, [authAvailable]);
 
   if (loading) return <div className="animate-pulse h-20 bg-sky-50 dark:bg-sky-900/20 rounded-xl mt-6"></div>;
 

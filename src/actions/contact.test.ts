@@ -31,6 +31,11 @@ function createContactFormData(
 async function loadContactModule(options?: {
   hasEnv?: boolean;
   rateLimitOk?: boolean;
+  sendEmailError?: {
+    message: string;
+    name: string;
+    statusCode: number | null;
+  } | null;
 }) {
   vi.resetModules();
 
@@ -49,7 +54,17 @@ async function loadContactModule(options?: {
     retryAfterMs: 60_000,
   });
   const getClientRateLimitIdentifierMock = vi.fn().mockResolvedValue("client-fingerprint");
-  const sendEmailMock = vi.fn().mockResolvedValue({ data: { id: "email_123" } });
+  const sendEmailMock = vi.fn().mockResolvedValue(
+    options?.sendEmailError
+      ? {
+          data: null,
+          error: options.sendEmailError,
+        }
+      : {
+          data: { id: "email_123" },
+          error: null,
+        }
+  );
 
   vi.doMock("@/lib/rateLimit", () => ({
     consumeRateLimit: consumeRateLimitMock,
@@ -134,6 +149,21 @@ describe("contact action", () => {
     });
 
     expect(sendEmailMock).not.toHaveBeenCalled();
+  });
+
+  it("returns a failure when Resend responds with an API error", async () => {
+    const { sendContactEmail } = await loadContactModule({
+      sendEmailError: {
+        message: "Domain not verified",
+        name: "validation_error",
+        statusCode: 422,
+      },
+    });
+
+    await expect(sendContactEmail(null, createContactFormData())).resolves.toEqual({
+      success: false,
+      error: "Failed to send email",
+    });
   });
 
   it("sends normalized contact emails with stable inquiry labels", async () => {
