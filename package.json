@@ -28,7 +28,7 @@
     "prebuild": "npm run data:grammar:export",
     "build": "next build --webpack",
     "start": "next start",
-    "data:grammar:export": "node --experimental-default-type=module --experimental-strip-types scripts/exportGrammar.mts",
+    "data:grammar:export": "node --experimental-strip-types scripts/exportGrammar.mts",
     "data:dictionary:derive": "node --experimental-strip-types scripts/applyDerivedDictionaryEntries.ts",
     "data:dictionary:validate-config": "node --experimental-strip-types scripts/validateDictionarySourceConfig.ts",
     "data:dictionary:audit-related": "node --experimental-strip-types scripts/auditRelatedForms.ts",
