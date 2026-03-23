@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+import { cache } from "react";
 import type { LexicalEntry } from "@/features/dictionary/types";
 import type { Language } from "@/types/i18n";
 
@@ -8,7 +9,7 @@ function getDictionaryFilePath(language: Language) {
   return path.join(process.cwd(), `public/data/${fileName}`);
 }
 
-export function getDictionary(language: Language = "en"): LexicalEntry[] {
+const readDictionary = cache((language: Language): LexicalEntry[] => {
   const filePath = getDictionaryFilePath(language);
 
   if (!fs.existsSync(filePath)) {
@@ -17,6 +18,10 @@ export function getDictionary(language: Language = "en"): LexicalEntry[] {
 
   const fileContents = fs.readFileSync(filePath, "utf8");
   return JSON.parse(fileContents) as LexicalEntry[];
+});
+
+export function getDictionary(language: Language = "en"): LexicalEntry[] {
+  return readDictionary(language);
 }
 
 export function getDictionaryEntryById(

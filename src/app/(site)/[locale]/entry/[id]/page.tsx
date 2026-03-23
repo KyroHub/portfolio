@@ -27,14 +27,9 @@ import {
   createDefinedTermStructuredData,
 } from '@/lib/structuredData';
 
-// Dictionary entries are fully pre-rendered so lookups stay fast and every
-// entry gets stable SEO metadata at build time.
-export async function generateStaticParams() {
-  const dictionary = getDictionary();
-  return dictionary.map(entry => ({
-    id: entry.id,
-  }));
-}
+// Render dictionary entries on demand so the deployment stays within output
+// size limits while preserving stable, crawlable metadata per entry.
+export const revalidate = 86400;
 
 export async function generateMetadata({
   params,
