@@ -6,6 +6,10 @@ import { PageShell, pageShellAccents } from '@/components/PageShell'
 import { StatusNotice } from '@/components/StatusNotice'
 import { SurfacePanel } from '@/components/SurfacePanel'
 import { createNoIndexMetadata } from '@/lib/metadata'
+import {
+  getAuthUnavailableLoginPath,
+  hasSupabaseRuntimeEnv,
+} from '@/lib/supabase/config'
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 
@@ -28,6 +32,10 @@ export default async function UpdatePasswordPage({
     state?: string
   }>
 }) {
+  if (!hasSupabaseRuntimeEnv()) {
+    return redirect(getAuthUnavailableLoginPath('/update-password'))
+  }
+
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   
