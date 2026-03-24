@@ -1,8 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
 import type { Metadata } from 'next'
-import { createClient } from '@/lib/supabase/server'
-import { getAuthUnavailableLoginPath, hasSupabaseRuntimeEnv } from '@/lib/supabase/config'
-import { getAuthenticatedUser, getUserSubmissions } from '@/lib/supabase/queries'
+import { requireAuthenticatedPageSession } from '@/lib/supabase/auth'
+import { getLoginPath } from '@/lib/supabase/config'
+import { getUserSubmissions } from '@/lib/supabase/queries'
 import { redirect } from 'next/navigation'
 import { logout } from '@/actions/auth'
 import { Badge } from '@/components/Badge'
@@ -34,21 +34,11 @@ export const metadata: Metadata = createNoIndexMetadata({
 })
 
 export default async function DashboardPage() {
-  if (!hasSupabaseRuntimeEnv()) {
-    return redirect(getAuthUnavailableLoginPath('/dashboard'))
-  }
-
-  const supabase = await createClient()
-
-  const user = await getAuthenticatedUser(supabase)
-
-  if (!user) {
-    return redirect('/login')
-  }
+  const { supabase, user } = await requireAuthenticatedPageSession('/dashboard')
 
   const profile = await getProfile(supabase, user.id)
   if (!profile) {
-    return redirect('/login')
+    return redirect(getLoginPath('/dashboard'))
   }
 
   const [

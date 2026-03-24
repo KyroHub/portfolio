@@ -1,6 +1,6 @@
 'use server'
 
-import { createClient } from '@/lib/supabase/server'
+import { getAdminServerContext } from '@/lib/supabase/auth'
 import { hasSupabaseRuntimeEnv } from '@/lib/supabase/config'
 import { revalidatePath } from 'next/cache'
 import {
@@ -19,12 +19,9 @@ export async function submitFeedback(formData: FormData) {
     return
   }
 
-  const supabase = await createClient()
-
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return
-  const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single()
-  if (profile?.role !== 'admin') return
+  const adminContext = await getAdminServerContext()
+  if (!adminContext) return
+  const { supabase, user } = adminContext
 
   const submissionId = normalizeWhitespace(getFormString(formData, 'submission_id'))
   const rating = parseBoundedInteger(normalizeWhitespace(getFormString(formData, 'rating')), {

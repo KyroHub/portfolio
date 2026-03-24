@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { createClient } from "@/lib/supabase/server";
+import { getAuthenticatedServerContext } from "@/lib/supabase/auth";
 import { hasSupabaseRuntimeEnv } from "@/lib/supabase/config";
 
 export async function updateProfile(formData: FormData) {
@@ -9,15 +9,11 @@ export async function updateProfile(formData: FormData) {
     return { success: false, error: "Supabase environment missing." };
   }
 
-  const supabase = await createClient();
-  const {
-    data: { user },
-    error: authError,
-  } = await supabase.auth.getUser();
-
-  if (authError || !user) {
+  const authContext = await getAuthenticatedServerContext();
+  if (!authContext) {
     return { success: false, error: "You must be logged in." };
   }
+  const { supabase, user } = authContext;
 
   const fullName = formData.get("full_name") as string | null;
   const avatarUrl = formData.get("avatar_url") as string | null;

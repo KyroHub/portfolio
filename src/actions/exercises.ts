@@ -4,8 +4,8 @@ import {
   getGrammarExerciseDocumentById,
   getGrammarLessonDocumentBySlug,
 } from '@/content/grammar/registry'
+import { getAuthenticatedServerContext } from '@/lib/supabase/auth'
 import { hasSupabaseRuntimeEnv } from '@/lib/supabase/config'
-import { createClient } from '@/lib/supabase/server'
 import {
   consumeRateLimit,
   getUserRateLimitIdentifier,
@@ -39,10 +39,9 @@ export async function submitExercise(_prevState: ExerciseActionState, formData: 
     }
   }
 
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-
-  if (!user) return { success: false, error: 'Unauthorized. Please log in first.' }
+  const authContext = await getAuthenticatedServerContext()
+  if (!authContext) return { success: false, error: 'Unauthorized. Please log in first.' }
+  const { supabase, user } = authContext
 
   const lessonSlug = normalizeWhitespace(getFormString(formData, 'lessonSlug'))
   const exerciseId = normalizeWhitespace(getFormString(formData, 'exerciseId'))

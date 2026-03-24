@@ -6,12 +6,7 @@ import { PageShell, pageShellAccents } from '@/components/PageShell'
 import { StatusNotice } from '@/components/StatusNotice'
 import { SurfacePanel } from '@/components/SurfacePanel'
 import { createNoIndexMetadata } from '@/lib/metadata'
-import {
-  getAuthUnavailableLoginPath,
-  hasSupabaseRuntimeEnv,
-} from '@/lib/supabase/config'
-import { createClient } from '@/lib/supabase/server'
-import { redirect } from 'next/navigation'
+import { requireAuthenticatedPageSession } from '@/lib/supabase/auth'
 
 const NOTICE_MESSAGES: Record<string, string> = {
   'update-invalid-input': 'Password must be at least 8 characters long.',
@@ -32,16 +27,7 @@ export default async function UpdatePasswordPage({
     state?: string
   }>
 }) {
-  if (!hasSupabaseRuntimeEnv()) {
-    return redirect(getAuthUnavailableLoginPath('/update-password'))
-  }
-
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  
-  if (!user) {
-    redirect('/login')
-  }
+  await requireAuthenticatedPageSession('/update-password')
 
   const { messageType = 'error', state } = await searchParams;
   const noticeMessage = state && state in NOTICE_MESSAGES ? NOTICE_MESSAGES[state] : undefined;

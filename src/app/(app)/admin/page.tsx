@@ -1,12 +1,8 @@
 import type { Metadata } from 'next'
-import { createClient } from '@/lib/supabase/server'
-import { getAuthUnavailableLoginPath, hasSupabaseRuntimeEnv } from '@/lib/supabase/config'
+import { requireAdminPageSession } from '@/lib/supabase/auth'
 import {
   getAdminSubmissions,
-  getAuthenticatedUser,
-  getProfileRole,
 } from '@/lib/supabase/queries'
-import { redirect } from 'next/navigation'
 import { PageHeader } from '@/components/PageHeader'
 import { PageShell, pageShellAccents } from '@/components/PageShell'
 import { SubmissionCard } from '@/features/submissions/components/SubmissionCard'
@@ -21,17 +17,7 @@ export const metadata: Metadata = createNoIndexMetadata({
 })
 
 export default async function AdminDashboard() {
-  if (!hasSupabaseRuntimeEnv()) {
-    return redirect(getAuthUnavailableLoginPath('/admin'))
-  }
-
-  const supabase = await createClient()
-
-  const user = await getAuthenticatedUser(supabase)
-  if (!user) return redirect('/login')
-
-  const role = await getProfileRole(supabase, user.id)
-  if (role !== 'admin') return redirect('/dashboard')
+  const { supabase } = await requireAdminPageSession('/admin')
 
   const { data: submissions, error } = await getAdminSubmissions(supabase)
 
