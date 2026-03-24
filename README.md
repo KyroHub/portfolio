@@ -53,15 +53,35 @@ Digital Coptic language platform by Kyrillos Wannes, bringing together a searcha
 ```bash
 git clone https://github.com/KyroHub/portfolio.git
 cd portfolio
+nvm use
 npm install
 npm run dev
 ```
 
 Then open [http://localhost:3000](http://localhost:3000).
 
+The repository includes [`.nvmrc`](./.nvmrc) to pin the local Node.js version used in CI.
+
+### Environment Setup
+
+Copy the example file only if you want to enable Supabase auth, contact email, or distributed rate limiting locally:
+
+```bash
+cp .env.example .env.local
+```
+
+Then replace the placeholder values in `.env.local` with your own local credentials.
+
+Important:
+
+- `.env.local` is gitignored and should never be committed.
+- [`.env.example`](./.env.example) contains placeholders only and is safe to track.
+- If you skip environment setup, public pages still work, but auth and email-backed features may be unavailable.
+
 Useful commands:
 
 ```bash
+npm run lint
 npm run test
 npm run build
 ```

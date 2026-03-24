@@ -1,6 +1,22 @@
 # Contributing
 
-Thanks for helping improve the dictionary and portfolio.
+Thanks for helping improve the digital learning tools.
+
+## Local Setup
+
+Use the pinned Node.js version before installing dependencies:
+
+```bash
+nvm use
+```
+
+If you need auth, email, or rate limiting locally, copy the example environment file and fill in your own values:
+
+```bash
+cp .env.example .env.local
+```
+
+Do not commit `.env.local`. It is gitignored by default, while [`.env.example`](./.env.example) is tracked with placeholder values only.
 
 ## What Contributions Are Most Helpful
 
@@ -46,13 +62,9 @@ Please keep PRs focused and explain:
 Before opening a PR, run:
 
 ```bash
-npm run build
-```
-
-If you touched lint-clean areas, also run:
-
-```bash
 npm run lint
+npm run test
+npm run build
 ```
 
 ## Style Guidelines
