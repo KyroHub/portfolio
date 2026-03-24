@@ -1,23 +1,19 @@
-import fs from "fs";
-import path from "path";
 import { cache } from "react";
 import type { LexicalEntry } from "@/features/dictionary/types";
 import type { Language } from "@/types/i18n";
+import { assertServerOnly } from "../../../lib/server/assertServerOnly.ts";
+import { readProjectJsonFile } from "../../../lib/server/projectFiles.ts";
+
+assertServerOnly("src/features/dictionary/lib/dictionary.ts");
 
 function getDictionaryFilePath(language: Language) {
-  const fileName = language === "nl" ? "woordenboek.json" : "dictionary.json";
-  return path.join(process.cwd(), `public/data/${fileName}`);
+  return language === "nl"
+    ? "public/data/woordenboek.json"
+    : "public/data/dictionary.json";
 }
 
 const readDictionary = cache((language: Language): LexicalEntry[] => {
-  const filePath = getDictionaryFilePath(language);
-
-  if (!fs.existsSync(filePath)) {
-    return [];
-  }
-
-  const fileContents = fs.readFileSync(filePath, "utf8");
-  return JSON.parse(fileContents) as LexicalEntry[];
+  return readProjectJsonFile<LexicalEntry[]>(getDictionaryFilePath(language)) ?? [];
 });
 
 export function getDictionary(language: Language = "en"): LexicalEntry[] {

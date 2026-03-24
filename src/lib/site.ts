@@ -1,11 +1,8 @@
-import fs from "fs";
-import path from "path";
+import { readProjectJsonFile } from "@/lib/server/projectFiles";
 
 function getDictionaryEntryCount() {
   try {
-    const dictionaryPath = path.join(process.cwd(), "public/data/dictionary.json");
-    const rawData = fs.readFileSync(dictionaryPath, "utf8");
-    const dictionary = JSON.parse(rawData) as unknown;
+    const dictionary = readProjectJsonFile<unknown[]>("public/data/dictionary.json");
 
     return Array.isArray(dictionary) ? dictionary.length : 0;
   } catch {

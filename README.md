@@ -48,6 +48,13 @@ Digital Coptic language platform by Kyrillos Wannes, bringing together a searcha
 - Theme support: `next-themes`
 - Data delivery: static JSON generated from typed source data and transformation scripts
 
+## Runtime Assumptions
+
+- Production is currently designed around Next.js running on the Node.js runtime, typically on Vercel.
+- Cloudflare works well in front of the app as DNS, CDN, or proxy, but the app is not currently structured for Cloudflare Workers or other Edge-only runtimes.
+- Some server modules read local project files at build or request time, including dictionary JSON files in `public/data`, grammar exports, and source timestamps used by the sitemap.
+- If you later want to move more of the app to Edge or Worker runtimes, these filesystem reads should be replaced with build-time imports, generated manifests, or storage/API-backed lookups.
+
 ## Local Development
 
 ```bash

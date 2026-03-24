@@ -1,11 +1,14 @@
 import fs from "fs";
 import { fileURLToPath } from "url";
+import { assertServerOnly } from "@/lib/server/assertServerOnly.ts";
 import type { PartOfSpeech } from "../config.ts";
 import type {
   DictionaryDialectFormsMap,
   LexicalGender,
   LexicalRelationType,
 } from "../types.ts";
+
+assertServerOnly("src/features/dictionary/lib/dictionarySourceConfig.ts");
 
 export type DictionarySourceLocale = "en" | "nl";
 
@@ -125,7 +128,9 @@ let dictionarySourceConfigCache: DictionarySourceConfig | null = null;
 
 function parseCuratedDerivedEntryDefinitions(value: unknown) {
   if (!Array.isArray(value)) {
-    throw new Error("master-dictionary.json.curatedDerivedEntries must be an array");
+    throw new Error(
+      "master-dictionary.json.curatedDerivedEntries must be an array",
+    );
   }
 
   return value.map((item, index) => {

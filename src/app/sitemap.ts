@@ -1,5 +1,3 @@
-import fs from "fs";
-import path from "path";
 import type { MetadataRoute } from "next";
 import { getDictionary } from "@/features/dictionary/lib/dictionary";
 import { listPublishedGrammarLessons } from "@/features/grammar/lib/grammarDataset";
@@ -16,8 +14,11 @@ import {
   getPublicationsPath,
   PUBLIC_LOCALES,
 } from "@/lib/locale";
+import { getLatestProjectFileMtime } from "@/lib/server/projectFiles";
 import { siteConfig } from "@/lib/site";
 import type { Language } from "@/types/i18n";
+
+export const runtime = "nodejs";
 
 type LocalizedStaticRouteConfig = {
   getRoute: (locale: Language) => string;
@@ -78,33 +79,20 @@ const localizedStaticRoutes: readonly LocalizedStaticRouteConfig[] = [
 // Keep the sitemap focused on the strongest public landing pages.
 const staticRoutes: readonly StaticRouteConfig[] = [];
 
-function getLastModified(sourcePaths: readonly string[]) {
-  const modifiedTimestamps = sourcePaths
-    .map((sourcePath) => path.join(process.cwd(), sourcePath))
-    .filter((absolutePath) => fs.existsSync(absolutePath))
-    .map((absolutePath) => fs.statSync(absolutePath).mtime.getTime());
-
-  if (modifiedTimestamps.length === 0) {
-    return undefined;
-  }
-
-  return new Date(Math.max(...modifiedTimestamps));
-}
-
 export default function sitemap(): MetadataRoute.Sitemap {
   const dictionary = getDictionary();
-  const dictionaryLastModified = getLastModified([
+  const dictionaryLastModified = getLatestProjectFileMtime([
     "public/data/dictionary.json",
     "public/data/woordenboek.json",
   ]);
-  const publicationsLastModified = getLastModified([
+  const publicationsLastModified = getLatestProjectFileMtime([
     "src/features/publications/lib/publications.ts",
     "src/app/(site)/[locale]/publications/[id]/page.tsx",
     "src/features/publications/components/PublicationDetailPageClient.tsx",
   ]);
   const grammarLessonPages = PUBLIC_LOCALES.flatMap((locale) =>
     listPublishedGrammarLessons().map((lesson) => {
-      const lastModified = getLastModified([
+      const lastModified = getLatestProjectFileMtime([
         "src/app/(site)/[locale]/grammar/[slug]/page.tsx",
         `public/data/grammar/v1/lessons/${lesson.slug}.json`,
         "public/data/grammar/v1/manifest.json",
@@ -121,7 +109,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const localizedStaticPages = PUBLIC_LOCALES.flatMap((locale) =>
     localizedStaticRoutes.map((route) => {
-      const lastModified = getLastModified(route.sourcePaths);
+      const lastModified = getLatestProjectFileMtime(route.sourcePaths);
 
       return {
         url: `${siteConfig.liveUrl}${route.getRoute(locale)}`,
@@ -133,7 +121,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   ) satisfies MetadataRoute.Sitemap;
 
   const staticPages = staticRoutes.map((route) => {
-    const lastModified = getLastModified([
+    const lastModified = getLatestProjectFileMtime([
       ...route.sourcePaths,
     ]);
 
