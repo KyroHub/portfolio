@@ -2,13 +2,13 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
 import { LanguageToggle } from "./LanguageToggle";
 import { useLanguage } from "./LanguageProvider";
-import type { User } from "@supabase/supabase-js";
 import {
   getContactPath,
   getDictionaryPath,
@@ -16,43 +16,30 @@ import {
   getLocalizedHomePath,
   getPublicationsPath,
 } from "@/lib/locale";
-import { createClient, hasSupabaseEnv } from "@/lib/supabase/client";
+
+const NavbarAuthLink = dynamic(
+  () =>
+    import("./NavbarAuthLink").then((module) => ({
+      default: module.NavbarAuthLink,
+    })),
+  {
+    ssr: false,
+    loading: () => (
+      <Link
+        href="/login"
+        data-label="Log In"
+        className="group inline-grid h-10 items-center rounded-full px-4 text-sm tracking-[0.02em] text-stone-600 transition-all duration-200 dark:text-stone-400"
+      >
+        <span className="col-start-1 row-start-1 font-medium">Log In</span>
+      </Link>
+    ),
+  },
+);
 
 export function Navbar() {
-  const pathname = usePathname();
+  const pathname = usePathname() ?? "";
   const { language, t } = useLanguage();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [user, setUser] = useState<User | null>(null);
-
-  useEffect(() => {
-    if (!hasSupabaseEnv()) {
-      return;
-    }
-
-    const supabase = createClient();
-    if (!supabase) {
-      return;
-    }
-
-    let isMounted = true;
-
-    void supabase.auth.getSession().then(({ data }) => {
-      if (isMounted) {
-        setUser(data.session?.user ?? null);
-      }
-    });
-
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
-    });
-
-    return () => {
-      isMounted = false;
-      subscription.unsubscribe();
-    };
-  }, []);
 
   const links = [
     { href: getPublicationsPath(language), label: t("nav.publications") },
@@ -60,10 +47,6 @@ export function Navbar() {
     { href: getGrammarPath(language), label: t("nav.grammar") },
     { href: getContactPath(language), label: t("nav.contact") },
   ];
-
-  const authLink = user
-    ? { href: "/dashboard", label: t("nav.dashboard") }
-    : { href: "/login", label: t("nav.login") || "Log In" };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-stone-200 bg-white/70 backdrop-blur-md shadow-sm transition-colors duration-300 dark:border-stone-800 dark:bg-stone-950/70">
@@ -87,8 +70,8 @@ export function Navbar() {
             </span>
           </Link>
 
-          <nav className="hidden items-center gap-1 md:flex">
-            {[...links, authLink].map((link) => {
+          <nav aria-label="Primary" className="hidden items-center gap-1 md:flex">
+            {links.map((link) => {
               const isActive = pathname === link.href || pathname.startsWith(`${link.href}/`);
               return (
                 <Link
@@ -107,14 +90,23 @@ export function Navbar() {
                 </Link>
               );
             })}
+            <NavbarAuthLink
+              dashboardLabel={t("nav.dashboard")}
+              loginLabel={t("nav.login") || "Log In"}
+              pathname={pathname}
+              variant="desktop"
+            />
           </nav>
 
           <div className="flex items-center gap-2">
             <ThemeToggle />
             <LanguageToggle />
             <button
+              type="button"
               className="icon-button md:hidden"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              aria-controls="mobile-navigation"
+              aria-expanded={isMobileMenuOpen}
               aria-label="Toggle Menu"
             >
               {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -123,8 +115,12 @@ export function Navbar() {
         </div>
 
         {isMobileMenuOpen && (
-          <nav className="mb-3 flex flex-col gap-1 rounded-2xl border border-stone-200 bg-white/80 p-2 shadow-md backdrop-blur-md md:hidden dark:border-stone-800 dark:bg-stone-900/70 dark:shadow-black/20">
-            {[...links, authLink].map((link) => {
+          <nav
+            id="mobile-navigation"
+            aria-label="Mobile"
+            className="mb-3 flex flex-col gap-1 rounded-2xl border border-stone-200 bg-white/80 p-2 shadow-md backdrop-blur-md md:hidden dark:border-stone-800 dark:bg-stone-900/70 dark:shadow-black/20"
+          >
+            {links.map((link) => {
               const isActive = pathname === link.href || pathname.startsWith(`${link.href}/`);
               return (
                 <Link
@@ -144,6 +140,13 @@ export function Navbar() {
                 </Link>
               );
             })}
+            <NavbarAuthLink
+              dashboardLabel={t("nav.dashboard")}
+              loginLabel={t("nav.login") || "Log In"}
+              onNavigate={() => setIsMobileMenuOpen(false)}
+              pathname={pathname}
+              variant="mobile"
+            />
           </nav>
         )}
       </div>
