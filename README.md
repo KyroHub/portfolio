@@ -1,44 +1,52 @@
-# Wannes Portfolio & Coptic Dictionary
+# Kyrillos Wannes | Coptic Dictionary, Grammar, and Publications
 
 ![Next.js](https://img.shields.io/badge/Next.js-16-black?logo=next.js&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?logo=typescript&logoColor=white)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-06B6D4?logo=tailwindcss&logoColor=white)
-![Recharts](https://img.shields.io/badge/Recharts-3.8-ef4444)
+![API](https://img.shields.io/badge/Public_Grammar_API-Live-0ea5e9)
 
-Scholarly portfolio and digital Coptic-English dictionary by Kyrillos Wannes, built for fast lexical browsing, bilingual study, and academic presentation.
+Digital Coptic language platform by Kyrillos Wannes, bringing together a searchable dictionary, published grammar lessons, academic publications, and a public grammar API.
 
 > Live site: [kyrilloswannes.com](https://kyrilloswannes.com)
 >
 > Repository: [github.com/KyroHub/portfolio](https://github.com/KyroHub/portfolio)
 
+## What the Site Includes
+
+- A searchable Coptic dictionary with 3,342 entries and support for Coptic, English, and Greek lookup.
+- Published grammar lessons with exercises, endnotes, concept glossaries, and links back to dictionary entries and sources.
+- A publications section for published and forthcoming books connected to the broader Coptic project.
+- A public grammar API with JSON endpoints and OpenAPI documentation for reuse in other tools and teaching workflows.
+- English and Dutch interfaces for broader classroom and research accessibility.
+
 ## Highlights
 
-- Browse a 3,330-entry Coptic dictionary with fuzzy search across Coptic, English, and Greek.
-- Type Coptic directly in the browser with a built-in virtual keyboard.
-- Inspect grammatical and dialectal forms inline, including absolute, nominal, pronominal, and stative states.
-- Explore analytics views for parts of speech, noun genders, and dictionary coverage patterns.
-- Switch between English and Dutch interfaces for wider teaching and classroom use.
+- Fast lexical browsing with support for Coptic script and a built-in virtual keyboard.
+- Rich entry pages with grammatical detail, dialect forms, and related content.
+- Grammar lessons that connect terminology, examples, sources, and dictionary entries in one reading flow.
+- Publication pages that tie research output back into the teaching and reference material.
+- Developer-facing grammar endpoints for lessons, concepts, examples, exercises, footnotes, and sources.
 
 ## Interface Preview
 
-Illustrated preview panels for the dictionary experience and built-in keyboard. These can be swapped for recorded browser screenshots or GIFs later.
-
 <p>
-  <img src="public/readme/dictionary-search-preview.svg" alt="Dictionary search interface preview" width="100%" />
+  <img src="public/readme/homepage-preview.png" alt="Homepage preview" width="49%" />
+  <img src="public/readme/dictionary-search-preview.png" alt="Dictionary search interface preview" width="49%" />
 </p>
 
 <p>
-  <img src="public/readme/virtual-keyboard-preview.svg" alt="Virtual keyboard interface preview" width="100%" />
+  <img src="public/readme/lesson-preview.png" alt="Grammar lesson preview" width="49%" />
+  <img src="public/readme/publications-preview.png" alt="Publications page preview" width="49%" />
 </p>
 
 ## Stack
 
 - Framework: Next.js 16 with the App Router
 - Language: TypeScript
-- Styling: Tailwind CSS 4
-- Charts: Recharts
+- UI: React 19 + Tailwind CSS 4
+- Charts and analytics: Recharts
 - Theme support: `next-themes`
-- Data pipeline: Excel -> TypeScript parser -> static JSON
+- Data delivery: static JSON generated from typed source data and transformation scripts
 
 ## Local Development
 
@@ -49,61 +57,92 @@ npm install
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) after the dev server starts.
+Then open [http://localhost:3000](http://localhost:3000).
 
-## Data Pipeline
-
-The dictionary data is generated from an Excel source and published as static JSON for the app.
+Useful commands:
 
 ```bash
-npx ts-node scripts/parseExcel.ts
+npm run test
+npm run build
 ```
 
-This regenerates:
+## Data Workflows
 
-- `public/data/dictionary.json`
-- `public/data/woordenboek.json` when you additionally run the translation workflow
+### Dictionary
 
-Related scripts:
+Dictionary content is generated and maintained through local scripts.
 
-- `scripts/parseExcel.ts`: parses the source spreadsheet into `dictionary.json`
-- `scripts/translateDictionary.ts`: builds or resumes the Dutch dataset
-- `scripts/rewriteDictionary.ts`: utilities for dictionary maintenance
+```bash
+npm run data:parse
+npm run data:dictionary:derive
+npm run data:dictionary:validate-config
+npm run data:dictionary:audit-related
+```
 
-## Roadmap
+Additional maintenance helpers:
 
-- Publications section with richer metadata, covers, and outbound links
-- Expanded Coptic Grammar lessons beyond lesson 1
-- Coptic Learner companion flows for guided study
-- Offline-first/PWA support for classroom and field use
-- Better README/media polish with real browser screenshots or short GIF walkthroughs
-- Submission tooling for new dictionary entries and editorial review
+```bash
+npm run data:translate
+npm run data:rewrite
+```
+
+### Grammar
+
+Grammar lesson data is exported into public JSON files used by the site and API.
+
+```bash
+npm run data:grammar:export
+```
+
+This export also runs automatically before production builds.
+
+## Public Grammar API
+
+The repository exposes a read-only public grammar dataset.
+
+Key entry points:
+
+- `/api/v1/grammar`
+- `/api/v1/grammar/manifest`
+- `/api/v1/grammar/lessons`
+- `/api/v1/grammar/concepts`
+- `/api/v1/grammar/examples`
+- `/api/v1/grammar/exercises`
+- `/api/v1/grammar/footnotes`
+- `/api/v1/grammar/sources`
+
+Docs and developer pages:
+
+- `/api-docs`
+- `/en/developers`
+- `/nl/developers`
+
+## Project Status
+
+Currently live in production:
+
+- Searchable Coptic dictionary
+- Published grammar lesson system
+- Publications section
+- Public grammar API and API docs
+- English and Dutch localized UI
+
+Current areas of growth:
+
+- More published grammar lessons
+- Expanded publication metadata and coverage
+- Submission and editorial workflows
+- Further polish for contributor and developer documentation
 
 ## Contributing
 
-Contributions are welcome, especially around dictionary corrections, metadata cleanup, UI polish, and teaching features.
+Contributions are welcome, especially around lexical corrections, metadata cleanup, UI refinements, and teaching-oriented improvements.
 
-If you want to propose new entries or lexical corrections:
+If you want to propose a correction or addition, start with [CONTRIBUTING.md](./CONTRIBUTING.md).
 
-1. Update the Excel source used by `scripts/parseExcel.ts`.
-2. Regenerate the JSON output.
-3. Include a clear note about the source, rationale, or scholarly correction in your PR.
-
-The full workflow lives in [CONTRIBUTING.md](./CONTRIBUTING.md).
-
-## GitHub Polish Still Worth Doing
-
-These items need GitHub-side configuration rather than code changes inside the repo:
-
-- Update the repository name and short description for better discoverability
-- Add GitHub topics such as `coptic`, `linguistics`, `dictionary`, `nextjs`, `typescript`, `digital-humanities`, and `tailwindcss`
-- Set the final production domain in the repo About panel and social preview settings if needed
-
-## Licensing
+## License
 
 This repository uses a split licensing model:
 
 - Source code: [MIT License](./LICENSE)
-- Dictionary dataset: CC-BY 4.0 attribution expectations for the lexical material in `public/data/dictionary.json`
-
-Please preserve scholarly credit when reusing or adapting the dataset.
+- Dictionary data: please preserve scholarly attribution when reusing or adapting lexical material
