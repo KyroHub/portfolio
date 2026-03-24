@@ -7,6 +7,7 @@ import { cx } from "@/lib/classes";
 export type BreadcrumbTrailItem = {
   label: string;
   href?: string;
+  labelClassName?: string;
 };
 
 type BreadcrumbTrailProps = {
@@ -43,7 +44,10 @@ export function BreadcrumbTrail({
               {item.href && !isCurrentPage ? (
                 <Link
                   href={item.href}
-                  className="transition-colors hover:text-stone-900 dark:hover:text-stone-200"
+                  className={cx(
+                    "transition-colors hover:text-stone-900 dark:hover:text-stone-200",
+                    item.labelClassName,
+                  )}
                 >
                   {item.label}
                 </Link>
@@ -51,6 +55,7 @@ export function BreadcrumbTrail({
                 <span
                   aria-current={isCurrentPage ? "page" : undefined}
                   className={cx(
+                    item.labelClassName,
                     isCurrentPage &&
                       "font-semibold text-stone-700 dark:text-stone-200",
                   )}

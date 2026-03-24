@@ -20,7 +20,7 @@ export default function EntryPageHeader({ entryLabel }: EntryPageHeaderProps) {
         items={[
           { label: t("nav.home"), href: getLocalizedHomePath(language) },
           { label: t("nav.dictionary"), href: getDictionaryPath(language) },
-          { label: entryLabel },
+          { label: entryLabel, labelClassName: "font-coptic" },
         ]}
       />
 

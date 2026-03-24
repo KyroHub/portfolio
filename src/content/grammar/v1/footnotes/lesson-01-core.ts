@@ -8,31 +8,6 @@ const lessonId = grammarLesson01Id;
 
 export const grammarLesson01CoreFootnotes: readonly GrammarFootnoteDocument[] = [
   {
-    id: "grammar.footnote.lesson01.001",
-    lessonId,
-    content: {
-      en: [
-        {
-          type: "paragraph",
-          content: [
-            { type: "smallCaps", children: [{ type: "text", text: "p" }] },
-            { type: "text", text: " stands for plural." },
-          ],
-        },
-      ],
-      nl: [
-        {
-          type: "paragraph",
-          content: [
-            { type: "smallCaps", children: [{ type: "text", text: "p" }] },
-            { type: "text", text: " voor pluralis (meervoud)." },
-          ],
-        },
-      ],
-    },
-    sourceRefs: [grammarLesson01SourceIds.forthcomingBasisgrammatica],
-  },
-  {
     id: "grammar.footnote.lesson01.002",
     lessonId,
     content: {
@@ -172,7 +147,10 @@ export const grammarLesson01CoreFootnotes: readonly GrammarFootnoteDocument[] = 
         {
           type: "paragraph",
           content: [
-            { type: "text", text: "In older church books and presentations, this is often archaically written as " },
+            {
+              type: "text",
+              text: "In older church books and presentations, this is often archaically written as ",
+            },
             { type: "coptic", text: "ϭⲟⲓⲥ" },
             { type: "text", text: ". The standard modern Bohairic spelling is " },
             { type: "coptic", text: "ϭⲱⲓⲥ" },
@@ -184,64 +162,14 @@ export const grammarLesson01CoreFootnotes: readonly GrammarFootnoteDocument[] = 
         {
           type: "paragraph",
           content: [
-            { type: "text", text: "In kerkelijke boeken en presentaties wordt dit vaak verouderd geschreven als " },
+            {
+              type: "text",
+              text: "In kerkelijke boeken en presentaties wordt dit vaak verouderd geschreven als ",
+            },
             { type: "coptic", text: "ϭⲟⲓⲥ" },
             { type: "text", text: ". De standaard Bohairische spelling is " },
             { type: "coptic", text: "ϭⲱⲓⲥ" },
             { type: "text", text: "." },
-          ],
-        },
-      ],
-    },
-    sourceRefs: [grammarLesson01SourceIds.forthcomingBasisgrammatica],
-  },
-  {
-    id: "grammar.footnote.lesson01.007",
-    lessonId,
-    content: {
-      en: [
-        {
-          type: "paragraph",
-          content: [
-            { type: "text", text: "N" },
-            {
-              type: "superscript",
-              children: [
-                {
-                  type: "em",
-                  children: [
-                    {
-                      type: "smallCaps",
-                      children: [{ type: "text", text: "m" }],
-                    },
-                  ],
-                },
-              ],
-            },
-            { type: "text", text: " is the abbreviation/symbol for a Nomen (proper noun/name)." },
-          ],
-        },
-      ],
-      nl: [
-        {
-          type: "paragraph",
-          content: [
-            { type: "text", text: "N" },
-            {
-              type: "superscript",
-              children: [
-                {
-                  type: "em",
-                  children: [
-                    {
-                      type: "smallCaps",
-                      children: [{ type: "text", text: "m" }],
-                    },
-                  ],
-                },
-              ],
-            },
-            { type: "text", text: " is de afkorting/symbool voor een Nomen (eigennaam)." },
           ],
         },
       ],

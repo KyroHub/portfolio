@@ -4,55 +4,6 @@
   "generatedAt": "2026-03-22T00:00:00.000Z",
   "data": [
     {
-      "id": "grammar.footnote.lesson01.001",
-      "lessonId": "grammar.lesson.01",
-      "content": {
-        "en": [
-          {
-            "type": "paragraph",
-            "content": [
-              {
-                "type": "smallCaps",
-                "children": [
-                  {
-                    "type": "text",
-                    "text": "p"
-                  }
-                ]
-              },
-              {
-                "type": "text",
-                "text": " stands for plural."
-              }
-            ]
-          }
-        ],
-        "nl": [
-          {
-            "type": "paragraph",
-            "content": [
-              {
-                "type": "smallCaps",
-                "children": [
-                  {
-                    "type": "text",
-                    "text": "p"
-                  }
-                ]
-              },
-              {
-                "type": "text",
-                "text": " voor pluralis (meervoud)."
-              }
-            ]
-          }
-        ]
-      },
-      "sourceRefs": [
-        "grammar.source.basisgrammatica-bohairisch-koptisch"
-      ]
-    },
-    {
       "id": "grammar.footnote.lesson01.002",
       "lessonId": "grammar.lesson.01",
       "content": {
@@ -328,83 +279,6 @@
               {
                 "type": "text",
                 "text": "."
-              }
-            ]
-          }
-        ]
-      },
-      "sourceRefs": [
-        "grammar.source.basisgrammatica-bohairisch-koptisch"
-      ]
-    },
-    {
-      "id": "grammar.footnote.lesson01.007",
-      "lessonId": "grammar.lesson.01",
-      "content": {
-        "en": [
-          {
-            "type": "paragraph",
-            "content": [
-              {
-                "type": "text",
-                "text": "N"
-              },
-              {
-                "type": "superscript",
-                "children": [
-                  {
-                    "type": "em",
-                    "children": [
-                      {
-                        "type": "smallCaps",
-                        "children": [
-                          {
-                            "type": "text",
-                            "text": "m"
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
-                "type": "text",
-                "text": " is the abbreviation/symbol for a Nomen (proper noun/name)."
-              }
-            ]
-          }
-        ],
-        "nl": [
-          {
-            "type": "paragraph",
-            "content": [
-              {
-                "type": "text",
-                "text": "N"
-              },
-              {
-                "type": "superscript",
-                "children": [
-                  {
-                    "type": "em",
-                    "children": [
-                      {
-                        "type": "smallCaps",
-                        "children": [
-                          {
-                            "type": "text",
-                            "text": "m"
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
-                "type": "text",
-                "text": " is de afkorting/symbool voor een Nomen (eigennaam)."
               }
             ]
           }

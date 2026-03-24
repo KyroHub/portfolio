@@ -287,10 +287,10 @@ export const grammarLesson01Document: GrammarLessonDocument = {
                   },
                   {
                     id: "feminine-group",
-                    label: { en: "Feminine f", nl: "Feminine f" },
+                    label: { en: "Feminine f", nl: "Vrouwelijk v" },
                     inlineLabel: {
                       en: [text("Feminine "), smallCaps("f")],
-                      nl: [text("Feminine "), smallCaps("f")],
+                      nl: [text("Vrouwelijk "), smallCaps("v")],
                     },
                     colSpan: 2,
                     align: "center",
@@ -596,11 +596,7 @@ export const grammarLesson01Document: GrammarLessonDocument = {
               {
                 id: `${lessonId}.section.significant-letters.row.plural`,
                 cells: {
-                  label: paragraphCell(
-                    text("Plural "),
-                    smallCaps("p"),
-                    footnoteRef("grammar.footnote.lesson01.001"),
-                  ),
+                  label: paragraphCell(text("Plural "), smallCaps("p")),
                   first: [
                     paragraph(copticSpan(text("ⲛ"))),
                     paragraph(text("/n/")),
@@ -676,11 +672,7 @@ export const grammarLesson01Document: GrammarLessonDocument = {
               {
                 id: `${lessonId}.section.significant-letters.row.plural.nl`,
                 cells: {
-                  label: paragraphCell(
-                    text("Meervoud "),
-                    smallCaps("p"),
-                    footnoteRef("grammar.footnote.lesson01.001"),
-                  ),
+                  label: paragraphCell(text("Meervoud "), smallCaps("p")),
                   first: [
                     paragraph(copticSpan(text("ⲛ"))),
                     paragraph(text("/n/")),
@@ -744,10 +736,10 @@ export const grammarLesson01Document: GrammarLessonDocument = {
               },
               {
                 id: "feminine",
-                label: { en: "Feminine f", nl: "Feminine f" },
+                label: { en: "Feminine f", nl: "Vrouwelijk v" },
                 inlineLabel: {
                   en: [text("Feminine "), smallCaps("f")],
-                  nl: [text("Feminine "), smallCaps("f")],
+                  nl: [text("Vrouwelijk "), smallCaps("v")],
                 },
               },
               {
@@ -1693,9 +1685,11 @@ export const grammarLesson01Document: GrammarLessonDocument = {
                   fullWord: [
                     paragraph(
                       copticSpan(text("Ϭⲱⲓⲥ")),
+                      footnoteRef("grammar.footnote.lesson01.006"),
                       text(" "),
                       smallCaps("m"),
-                      footnoteRef("grammar.footnote.lesson01.006"),
+                      text(" "),
+                      smallCaps("f"),
                     ),
                   ],
                   abbreviation: [paragraph(copticSpan(text("͞⳪̅, ϭ̅ⲥ̅")))],
@@ -1736,7 +1730,6 @@ export const grammarLesson01Document: GrammarLessonDocument = {
                         type: "em",
                         children: [smallCaps("m")],
                       }),
-                      footnoteRef("grammar.footnote.lesson01.007"),
                     ),
                   ],
                   abbreviation: [paragraph(copticSpan(text("Ⲓⲏ̅ⲥ̅, Ⲓⲥ̅, Ⲓ᷍ⲥ")))],
@@ -1915,9 +1908,11 @@ export const grammarLesson01Document: GrammarLessonDocument = {
                   fullWord: [
                     paragraph(
                       copticSpan(text("Ϭⲱⲓⲥ")),
+                      footnoteRef("grammar.footnote.lesson01.006"),
                       text(" "),
                       smallCaps("m"),
-                      footnoteRef("grammar.footnote.lesson01.006"),
+                      text(" "),
+                      smallCaps("v"),
                     ),
                   ],
                   abbreviation: [paragraph(copticSpan(text("͞⳪̅, ϭ̅ⲥ̅")))],
@@ -1958,7 +1953,6 @@ export const grammarLesson01Document: GrammarLessonDocument = {
                         type: "em",
                         children: [smallCaps("m")],
                       }),
-                      footnoteRef("grammar.footnote.lesson01.007"),
                     ),
                   ],
                   abbreviation: [paragraph(copticSpan(text("Ⲓⲏ̅ⲥ̅, Ⲓⲥ̅, Ⲓ᷍ⲥ")))],

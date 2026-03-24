@@ -81,13 +81,11 @@ describe("grammar content registry", () => {
     ]);
     expect(lessonBundle.footnotes.map((footnote) => footnote.id)).toEqual(
       expect.arrayContaining([
-        "grammar.footnote.lesson01.001",
         "grammar.footnote.lesson01.002",
         "grammar.footnote.lesson01.003",
         "grammar.footnote.lesson01.004",
         "grammar.footnote.lesson01.005",
         "grammar.footnote.lesson01.006",
-        "grammar.footnote.lesson01.007",
       ]),
     );
   });

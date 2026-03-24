@@ -1,6 +1,6 @@
 "use client";
 
-import type { ReactNode } from "react";
+import { useEffect, useRef, type ReactNode } from "react";
 import { ChevronDown } from "lucide-react";
 import { cx } from "@/lib/classes";
 import { useGrammarLessonRenderContext } from "./GrammarLessonRenderContext";
@@ -13,6 +13,7 @@ type GrammarLessonSectionProps = {
   className?: string;
   defaultOpen?: boolean;
   footer?: ReactNode;
+  openOnHashMatch?: boolean;
 };
 
 type GrammarLessonCardProps = {
@@ -45,11 +46,51 @@ export function GrammarLessonSection({
   className,
   defaultOpen = true,
   footer,
+  openOnHashMatch = false,
 }: GrammarLessonSectionProps) {
   const { renderMode } = useGrammarLessonRenderContext();
+  const detailsRef = useRef<HTMLDetailsElement>(null);
+
+  useEffect(() => {
+    if (!openOnHashMatch || renderMode === "pdf") {
+      return;
+    }
+
+    function revealHashTarget() {
+      const detailsElement = detailsRef.current;
+      const hash = window.location.hash;
+
+      if (!detailsElement || !hash) {
+        return;
+      }
+
+      const targetId = decodeURIComponent(hash.slice(1));
+      const targetElement = document.getElementById(targetId);
+
+      if (!targetElement) {
+        return;
+      }
+
+      if (targetElement === detailsElement || detailsElement.contains(targetElement)) {
+        detailsElement.open = true;
+
+        window.requestAnimationFrame(() => {
+          targetElement.scrollIntoView({ block: "start", behavior: "smooth" });
+        });
+      }
+    }
+
+    revealHashTarget();
+    window.addEventListener("hashchange", revealHashTarget);
+
+    return () => {
+      window.removeEventListener("hashchange", revealHashTarget);
+    };
+  }, [openOnHashMatch, renderMode]);
 
   return (
     <details
+      ref={detailsRef}
       id={id}
       open={renderMode === "pdf" ? true : defaultOpen}
       className={cx(

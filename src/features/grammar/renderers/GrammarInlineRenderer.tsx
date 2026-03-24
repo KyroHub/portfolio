@@ -2,14 +2,20 @@
 
 import type { ReactNode } from "react";
 import type { GrammarInline } from "@/content/grammar/schema";
-import { getGrammarConceptAnchorId } from "@/features/grammar/lib/grammarPresentation";
+import { GrammarAbbreviation } from "@/features/grammar/components/GrammarAbbreviation";
+import {
+  getGrammarConceptAnchorId,
+  getGrammarLessonAbbreviationAnchorId,
+} from "@/features/grammar/lib/grammarPresentation";
 import { getEntryPath } from "@/lib/locale";
 import type { Language } from "@/types/i18n";
 
 type GrammarInlineRendererProps = {
   nodes: readonly GrammarInline[];
   language: Language;
+  lessonId?: string;
   renderFootnoteRef?: (ref: string, key: string) => ReactNode;
+  enableAbbreviationLinks?: boolean;
 };
 
 function renderDictionaryEntryHref(
@@ -48,15 +54,117 @@ function renderCopticNode(
   );
 }
 
+function getLessonAbbreviationHref(
+  node: GrammarInline,
+  lessonId: string | undefined,
+  enableAbbreviationLinks: boolean,
+) {
+  if (!lessonId || !enableAbbreviationLinks) {
+    return null;
+  }
+
+  if (
+    node.type === "smallCaps" &&
+    node.children.length === 1 &&
+    node.children[0]?.type === "text"
+  ) {
+    const abbreviation = node.children[0].text.trim().toLowerCase();
+
+    if (abbreviation === "m") {
+      return `#${getGrammarLessonAbbreviationAnchorId(lessonId, "masculine")}`;
+    }
+
+    if (abbreviation === "f" || abbreviation === "v") {
+      return `#${getGrammarLessonAbbreviationAnchorId(lessonId, "feminine")}`;
+    }
+
+    if (abbreviation === "s") {
+      return `#${getGrammarLessonAbbreviationAnchorId(lessonId, "singular")}`;
+    }
+
+    if (abbreviation === "p") {
+      return `#${getGrammarLessonAbbreviationAnchorId(lessonId, "plural")}`;
+    }
+  }
+
+  if (node.type === "text") {
+    const normalizedText = node.text.trim();
+
+    if (/^\/.+\/$/.test(normalizedText)) {
+      return `#${getGrammarLessonAbbreviationAnchorId(lessonId, "ipa")}`;
+    }
+  }
+
+  return null;
+}
+
+function isNmSuperscriptNode(node: GrammarInline | undefined) {
+  if (node?.type !== "superscript" || node.children.length !== 1) {
+    return false;
+  }
+
+  const emphasisNode = node.children[0];
+
+  if (emphasisNode?.type !== "em" || emphasisNode.children.length !== 1) {
+    return false;
+  }
+
+  const abbreviationNode = emphasisNode.children[0];
+
+  return (
+    abbreviationNode?.type === "smallCaps" &&
+    abbreviationNode.children.length === 1 &&
+    abbreviationNode.children[0]?.type === "text" &&
+    abbreviationNode.children[0].text.trim().toLowerCase() === "m"
+  );
+}
+
+function getCompoundAbbreviationMatch(
+  nodes: readonly GrammarInline[],
+  index: number,
+  lessonId: string | undefined,
+  enableAbbreviationLinks: boolean,
+) {
+  if (!lessonId || !enableAbbreviationLinks) {
+    return null;
+  }
+
+  const currentNode = nodes[index];
+  const nextNode = nodes[index + 1];
+
+  if (currentNode?.type === "text" && currentNode.text.trim() === "N" && isNmSuperscriptNode(nextNode)) {
+    return {
+      href: `#${getGrammarLessonAbbreviationAnchorId(lessonId, "nm")}`,
+      length: 2,
+    };
+  }
+
+  return null;
+}
+
 function renderInlineNode(
   node: GrammarInline,
   language: Language,
+  lessonId: string | undefined,
   key: string,
   renderFootnoteRef?: (ref: string, key: string) => ReactNode,
+  enableAbbreviationLinks = true,
 ): ReactNode {
+  const abbreviationHref = getLessonAbbreviationHref(
+    node,
+    lessonId,
+    enableAbbreviationLinks,
+  );
+
   switch (node.type) {
     case "text":
-      return <span key={key}>{node.text}</span>;
+      return abbreviationHref
+        ? (
+            <GrammarAbbreviation key={key} href={abbreviationHref}>
+              {node.text}
+            </GrammarAbbreviation>
+          )
+        : <span key={key}>{node.text}</span>;
     case "coptic":
       return renderCopticNode(
         key,
@@ -75,7 +183,9 @@ function renderInlineNode(
           <GrammarInlineRenderer
             nodes={node.children}
             language={language}
+            lessonId={lessonId}
             renderFootnoteRef={renderFootnoteRef}
+            enableAbbreviationLinks={enableAbbreviationLinks}
           />
         </>,
       );
@@ -85,7 +195,9 @@ function renderInlineNode(
           <GrammarInlineRenderer
             nodes={node.children}
             language={language}
+            lessonId={lessonId}
             renderFootnoteRef={renderFootnoteRef}
+            enableAbbreviationLinks={enableAbbreviationLinks}
           />
         </strong>
       );
@@ -95,19 +207,39 @@ function renderInlineNode(
           <GrammarInlineRenderer
             nodes={node.children}
             language={language}
+            lessonId={lessonId}
             renderFootnoteRef={renderFootnoteRef}
+            enableAbbreviationLinks={enableAbbreviationLinks}
           />
         </em>
       );
     case "smallCaps":
       return (
-        <span key={key} className="small-caps">
-          <GrammarInlineRenderer
-            nodes={node.children}
-            language={language}
-            renderFootnoteRef={renderFootnoteRef}
-          />
-        </span>
+        abbreviationHref ? (
+          <GrammarAbbreviation
+            key={key}
+            href={abbreviationHref}
+            className="small-caps"
+          >
+            <GrammarInlineRenderer
+              nodes={node.children}
+              language={language}
+              lessonId={lessonId}
+              renderFootnoteRef={renderFootnoteRef}
+              enableAbbreviationLinks={enableAbbreviationLinks}
+            />
+          </GrammarAbbreviation>
+        ) : (
+          <span key={key} className="small-caps">
+            <GrammarInlineRenderer
+              nodes={node.children}
+              language={language}
+              lessonId={lessonId}
+              renderFootnoteRef={renderFootnoteRef}
+              enableAbbreviationLinks={enableAbbreviationLinks}
+            />
+          </span>
+        )
       );
     case "underline":
       return (
@@ -118,7 +250,9 @@ function renderInlineNode(
           <GrammarInlineRenderer
             nodes={node.children}
             language={language}
+            lessonId={lessonId}
             renderFootnoteRef={renderFootnoteRef}
+            enableAbbreviationLinks={enableAbbreviationLinks}
           />
         </span>
       );
@@ -128,7 +262,9 @@ function renderInlineNode(
           <GrammarInlineRenderer
             nodes={node.children}
             language={language}
+            lessonId={lessonId}
             renderFootnoteRef={renderFootnoteRef}
+            enableAbbreviationLinks={enableAbbreviationLinks}
           />
         </sup>
       );
@@ -167,7 +303,9 @@ function renderInlineNode(
           <GrammarInlineRenderer
             nodes={node.children}
             language={language}
+            lessonId={lessonId}
             renderFootnoteRef={renderFootnoteRef}
+            enableAbbreviationLinks={false}
           />
         </a>
       );
@@ -181,18 +319,54 @@ function renderInlineNode(
 export function GrammarInlineRenderer({
   nodes,
   language,
+  lessonId,
   renderFootnoteRef,
+  enableAbbreviationLinks = true,
 }: GrammarInlineRendererProps) {
+  const renderedNodes: ReactNode[] = [];
+
+  for (let index = 0; index < nodes.length; index += 1) {
+    const compoundAbbreviationMatch = getCompoundAbbreviationMatch(
+      nodes,
+      index,
+      lessonId,
+      enableAbbreviationLinks,
+    );
+
+    if (compoundAbbreviationMatch) {
+      renderedNodes.push(
+        <GrammarAbbreviation
+          key={`compound-${index}`}
+          href={compoundAbbreviationMatch.href}
+        >
+          <GrammarInlineRenderer
+            nodes={nodes.slice(index, index + compoundAbbreviationMatch.length)}
+            language={language}
+            lessonId={lessonId}
+            renderFootnoteRef={renderFootnoteRef}
+            enableAbbreviationLinks={false}
+          />
+        </GrammarAbbreviation>,
+      );
+      index += compoundAbbreviationMatch.length - 1;
+      continue;
+    }
+
+    const node = nodes[index];
+
+    renderedNodes.push(
+      renderInlineNode(
+        node,
+        language,
+        lessonId,
+        `${node.type}-${index}`,
+        renderFootnoteRef,
+        enableAbbreviationLinks,
+      ),
+    );
+  }
+
   return (
-    <>
-      {nodes.map((node, index) =>
-        renderInlineNode(
-          node,
-          language,
-          `${node.type}-${index}`,
-          renderFootnoteRef,
-        ),
-      )}
-    </>
+    <>{renderedNodes}</>
   );
 }

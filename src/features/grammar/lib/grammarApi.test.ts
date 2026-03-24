@@ -60,7 +60,7 @@ describe("grammar API helpers", () => {
     expect(lessonBundle?.data.lesson.slug).toBe("lesson-1");
     expect(lessonBundle?.data.concepts).toHaveLength(9);
     expect(lessonBundle?.data.examples).toHaveLength(12);
-    expect(lessonBundle?.data.footnotes).toHaveLength(7);
+    expect(lessonBundle?.data.footnotes).toHaveLength(5);
     expect(lessonBundle?.data.sources).toHaveLength(1);
     expect(lessonBundle?.data.lesson.rights).toMatchObject({
       author: "Kyrillos Wannes",
@@ -78,7 +78,7 @@ describe("grammar API helpers", () => {
     expect(listGrammarApiExercises(lessonId ?? undefined).data.map((exercise) => exercise.id)).toEqual([
       "grammar.exercise.lesson01.001",
     ]);
-    expect(listGrammarApiFootnotes(lessonId ?? undefined).data).toHaveLength(7);
+    expect(listGrammarApiFootnotes(lessonId ?? undefined).data).toHaveLength(5);
   });
 
   it("returns concept and source collections for lesson-level consumers", () => {

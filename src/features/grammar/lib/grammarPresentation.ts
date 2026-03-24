@@ -4,6 +4,14 @@ import type {
   GrammarSourceDocument,
 } from "@/content/grammar/schema";
 
+export type GrammarLessonAbbreviationAnchorKey =
+  | "masculine"
+  | "feminine"
+  | "singular"
+  | "plural"
+  | "ipa"
+  | "nm";
+
 function normalizeReferenceAnchorSegment(value: string) {
   return value
     .trim()
@@ -20,6 +28,18 @@ export function getGrammarConceptAnchorId(conceptId: string) {
 export function getGrammarSourceAnchorId(sourceId: string) {
   const normalizedId = sourceId.replace(/^grammar\.source\./, "");
   return `source-${normalizeReferenceAnchorSegment(normalizedId)}`;
+}
+
+export function getGrammarLessonAbbreviationSectionId(lessonId: string) {
+  const normalizedId = lessonId.replace(/^grammar\.lesson\./, "");
+  return `abbreviations-${normalizeReferenceAnchorSegment(normalizedId)}`;
+}
+
+export function getGrammarLessonAbbreviationAnchorId(
+  lessonId: string,
+  key: GrammarLessonAbbreviationAnchorKey,
+) {
+  return `${getGrammarLessonAbbreviationSectionId(lessonId)}-${key}`;
 }
 
 export function getOrderedLessonConcepts(

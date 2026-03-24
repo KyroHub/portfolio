@@ -21,6 +21,7 @@ import { GrammarLessonRenderProvider } from "@/features/grammar/components/Gramm
 import {
   GrammarLessonConceptSummary,
 } from "@/features/grammar/components/GrammarLessonSemantics";
+import { getGrammarLessonAbbreviationSectionId } from "@/features/grammar/lib/grammarPresentation";
 import { getGrammarPath, getLocalizedHomePath } from "@/lib/locale";
 import { useGrammarLessonLearnerState } from "@/features/grammar/lib/useGrammarLessonLearnerState";
 import { GrammarLessonDocumentRenderer } from "@/features/grammar/renderers/GrammarLessonDocumentRenderer";
@@ -51,12 +52,26 @@ export function GrammarLessonPageClient({
   const lessonContentId = `${lesson.id}-pdf-content`;
   const lessonOutlineEyebrow = language === "en" ? "Lesson map" : "Lesoverzicht";
   const lessonOutlineTitle = language === "en" ? "On this page" : "Op deze pagina";
+  const lessonAbbreviationAppendixTitle =
+    language === "en"
+      ? "Abbreviations used in this lesson"
+      : "Afkortingen in deze les";
   const lessonRenderSessionKey = `${lesson.id}:${language}:${renderMode}`;
   const lessonDescription = lesson.description?.[language] ?? lesson.summary[language];
   const learnerState = useGrammarLessonLearnerState(lessonBundle);
   const hasSemanticSidebar =
     (renderMode === "web" && learnerState.status !== "unavailable") ||
     lessonBundle.concepts.length > 0;
+  const lessonOutlineSections = [
+    ...orderedSections.map((section) => ({
+      id: section.id,
+      title: section.title[language],
+    })),
+    {
+      id: getGrammarLessonAbbreviationSectionId(lesson.id),
+      title: lessonAbbreviationAppendixTitle,
+    },
+  ];
 
   return (
     <PageShell
@@ -124,10 +139,7 @@ export function GrammarLessonPageClient({
                   <GrammarLessonOutline
                     eyebrow={lessonOutlineEyebrow}
                     title={lessonOutlineTitle}
-                    sections={orderedSections.map((section) => ({
-                      id: section.id,
-                      title: section.title[language],
-                    }))}
+                    sections={lessonOutlineSections}
                   />
                   <div className="space-y-6">
                     {renderMode === "web" ? (
@@ -151,10 +163,7 @@ export function GrammarLessonPageClient({
                   className="mb-8"
                   eyebrow={lessonOutlineEyebrow}
                   title={lessonOutlineTitle}
-                  sections={orderedSections.map((section) => ({
-                    id: section.id,
-                    title: section.title[language],
-                  }))}
+                  sections={lessonOutlineSections}
                 />
               )}
               <GrammarLessonDocumentRenderer

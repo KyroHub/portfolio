@@ -233,6 +233,7 @@ function renderBlock(
           <GrammarInlineRenderer
             nodes={block.content}
             language={language}
+            lessonId={lessonBundle?.lesson.id}
             renderFootnoteRef={(ref, key) =>
               renderFootnoteRef(ref, key, language, lessonBundle, inheritTextColor)
             }
@@ -254,6 +255,7 @@ function renderBlock(
           <GrammarInlineRenderer
             nodes={block.content}
             language={language}
+            lessonId={lessonBundle?.lesson.id}
             renderFootnoteRef={(ref, key) =>
               renderFootnoteRef(ref, key, language, lessonBundle, inheritTextColor)
             }
@@ -323,6 +325,7 @@ function renderBlock(
                         <GrammarInlineRenderer
                           nodes={cell.inlineLabel[language]}
                           language={language}
+                          lessonId={lessonBundle?.lesson.id}
                         />
                       ) : (
                         cell.label[language]
@@ -344,6 +347,7 @@ function renderBlock(
                       <GrammarInlineRenderer
                         nodes={column.inlineLabel[language]}
                         language={language}
+                        lessonId={lessonBundle?.lesson.id}
                       />
                     ) : (
                       column.label[language]
