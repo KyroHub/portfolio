@@ -62,6 +62,12 @@ Then open [http://localhost:3000](http://localhost:3000).
 
 The repository includes [`.nvmrc`](./.nvmrc) to pin the local Node.js version used in CI.
 
+For Playwright smoke tests, install the Chromium browser once:
+
+```bash
+npx playwright install chromium
+```
+
 ### Environment Setup
 
 Copy the example file only if you want to enable Supabase auth, contact email, or distributed rate limiting locally:
@@ -83,6 +89,7 @@ Useful commands:
 ```bash
 npm run lint
 npm run test
+npm run test:e2e:local
 npm run build
 ```
 

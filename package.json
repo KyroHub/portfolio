@@ -36,7 +36,9 @@
     "data:rewrite": "node --experimental-strip-types scripts/rewriteDictionary.ts",
     "data:translate": "node --experimental-strip-types scripts/translateDictionary.ts",
     "lint": "eslint",
-    "test": "vitest run"
+    "test": "vitest run",
+    "test:e2e": "playwright test",
+    "test:e2e:local": "npm run build && npm run test:e2e"
   },
   "dependencies": {
     "@react-email/components": "^1.0.10",
@@ -58,6 +60,7 @@
     "swagger-ui-dist": "^5.32.1"
   },
   "devDependencies": {
+    "@playwright/test": "^1.58.2",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",

@@ -18,6 +18,12 @@ cp .env.example .env.local
 
 Do not commit `.env.local`. It is gitignored by default, while [`.env.example`](./.env.example) is tracked with placeholder values only.
 
+If you plan to run the browser smoke tests locally, install the Playwright browser once:
+
+```bash
+npx playwright install chromium
+```
+
 ## What Contributions Are Most Helpful
 
 - Dictionary corrections, additions, or metadata cleanup
@@ -65,6 +71,12 @@ Before opening a PR, run:
 npm run lint
 npm run test
 npm run build
+```
+
+If you changed routing, auth, redirects, metadata, or major UI flows, also run:
+
+```bash
+npm run test:e2e:local
 ```
 
 ## Style Guidelines
