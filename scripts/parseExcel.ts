@@ -3,7 +3,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { fileURLToPath } from 'url';
 import { applyDerivedDictionaryEntries } from '../src/features/dictionary/lib/derivedEntries.ts';
-import type { LexicalEntry } from '../src/lib/dictionaryTypes.ts';
+import type { LexicalEntry } from '../src/features/dictionary/types.ts';
 import {
   buildLexicalEntryFromSourceRow,
   type DictionarySourceRow,

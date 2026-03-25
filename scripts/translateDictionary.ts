@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { translate } from 'google-translate-api-x';
-import type { LexicalEntry } from '../src/lib/dictionaryTypes.ts';
+import type { LexicalEntry } from '../src/features/dictionary/types.ts';
 
 const DICT_PATH = path.join(process.cwd(), 'public/data/dictionary.json');
 const WOORDENBOEK_PATH = path.join(process.cwd(), 'public/data/woordenboek.json');

@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { fileURLToPath } from 'url';
-import type { LexicalEntry, LexicalGender } from '../src/lib/dictionaryTypes.ts';
+import type { LexicalEntry, LexicalGender } from '../src/features/dictionary/types.ts';
 import { applyDerivedDictionaryEntries, type DerivedDictionaryLocale } from '../src/features/dictionary/lib/derivedEntries.ts';
 import { extractDialectsAndHeadword } from '../src/features/dictionary/build/rawEntry.ts';
 

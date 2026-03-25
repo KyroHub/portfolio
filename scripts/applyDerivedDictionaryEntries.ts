@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import { applyDerivedDictionaryEntries, type DerivedDictionaryLocale } from "../src/features/dictionary/lib/derivedEntries.ts";
-import type { LexicalEntry } from "../src/lib/dictionaryTypes.ts";
+import type { LexicalEntry } from "../src/features/dictionary/types.ts";
 
 const dictionaryTargets = [
   {
