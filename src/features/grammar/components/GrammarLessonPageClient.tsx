@@ -54,8 +54,8 @@ export function GrammarLessonPageClient({
   const lessonOutlineTitle = language === "en" ? "On this page" : "Op deze pagina";
   const lessonAbbreviationAppendixTitle =
     language === "en"
-      ? "Abbreviations used in this lesson"
-      : "Afkortingen in deze les";
+      ? "Abbreviations and symbols used in this lesson"
+      : "Afkortingen en symbolen in deze les";
   const lessonRenderSessionKey = `${lesson.id}:${language}:${renderMode}`;
   const lessonDescription = lesson.description?.[language] ?? lesson.summary[language];
   const learnerState = useGrammarLessonLearnerState(lessonBundle);

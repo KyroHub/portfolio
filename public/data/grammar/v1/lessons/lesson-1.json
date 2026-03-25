@@ -288,6 +288,7 @@
               {
                 "type": "table",
                 "id": "grammar.lesson.01.section.vocabulary-bare-nouns.table",
+                "tableLayout": "fixed",
                 "headerRows": [
                   {
                     "id": "grammar.lesson.01.section.vocabulary-bare-nouns.header-row",
@@ -383,28 +384,32 @@
                     "label": {
                       "en": "",
                       "nl": ""
-                    }
+                    },
+                    "width": "25%"
                   },
                   {
                     "id": "masculineMeaning",
                     "label": {
                       "en": "",
                       "nl": ""
-                    }
+                    },
+                    "width": "25%"
                   },
                   {
                     "id": "feminineWord",
                     "label": {
                       "en": "",
                       "nl": ""
-                    }
+                    },
+                    "width": "25%"
                   },
                   {
                     "id": "feminineMeaning",
                     "label": {
                       "en": "",
                       "nl": ""
-                    }
+                    },
+                    "width": "25%"
                   }
                 ],
                 "rows": [
@@ -859,6 +864,7 @@
               {
                 "type": "table",
                 "id": "grammar.lesson.01.section.vocabulary-bare-nouns.table",
+                "tableLayout": "fixed",
                 "headerRows": [
                   {
                     "id": "grammar.lesson.01.section.vocabulary-bare-nouns.header-row.nl",
@@ -954,28 +960,32 @@
                     "label": {
                       "en": "",
                       "nl": ""
-                    }
+                    },
+                    "width": "25%"
                   },
                   {
                     "id": "masculineMeaning",
                     "label": {
                       "en": "",
                       "nl": ""
-                    }
+                    },
+                    "width": "25%"
                   },
                   {
                     "id": "feminineWord",
                     "label": {
                       "en": "",
                       "nl": ""
-                    }
+                    },
+                    "width": "25%"
                   },
                   {
                     "id": "feminineMeaning",
                     "label": {
                       "en": "",
                       "nl": ""
-                    }
+                    },
+                    "width": "25%"
                   }
                 ],
                 "rows": [
@@ -6612,7 +6622,43 @@
               "content": [
                 {
                   "type": "text",
-                  "text": "Postpositive enclitic pronouns such as ≡ⲡⲉ, ≡ⲧⲉ, and ≡ⲛⲉ that structure the bipartite nominal sentence."
+                  "text": "Postpositive enclitic pronouns such as "
+                },
+                {
+                  "type": "text",
+                  "text": "≡"
+                },
+                {
+                  "type": "coptic",
+                  "text": "ⲡⲉ"
+                },
+                {
+                  "type": "text",
+                  "text": ", "
+                },
+                {
+                  "type": "text",
+                  "text": "≡"
+                },
+                {
+                  "type": "coptic",
+                  "text": "ⲧⲉ"
+                },
+                {
+                  "type": "text",
+                  "text": ", and "
+                },
+                {
+                  "type": "text",
+                  "text": "≡"
+                },
+                {
+                  "type": "coptic",
+                  "text": "ⲛⲉ"
+                },
+                {
+                  "type": "text",
+                  "text": " that structure the bipartite nominal sentence."
                 }
               ]
             }
@@ -6623,7 +6669,43 @@
               "content": [
                 {
                   "type": "text",
-                  "text": "Postpositieve enclitische voornaamwoorden zoals ≡ⲡⲉ, ≡ⲧⲉ en ≡ⲛⲉ die de tweeledige nominale zin structureren."
+                  "text": "Postpositieve enclitische voornaamwoorden zoals "
+                },
+                {
+                  "type": "text",
+                  "text": "≡"
+                },
+                {
+                  "type": "coptic",
+                  "text": "ⲡⲉ"
+                },
+                {
+                  "type": "text",
+                  "text": ", "
+                },
+                {
+                  "type": "text",
+                  "text": "≡"
+                },
+                {
+                  "type": "coptic",
+                  "text": "ⲧⲉ"
+                },
+                {
+                  "type": "text",
+                  "text": " en "
+                },
+                {
+                  "type": "text",
+                  "text": "≡"
+                },
+                {
+                  "type": "coptic",
+                  "text": "ⲛⲉ"
+                },
+                {
+                  "type": "text",
+                  "text": " die de tweeledige nominale zin structureren."
                 }
               ]
             }
@@ -6704,7 +6786,34 @@
               "content": [
                 {
                   "type": "text",
-                  "text": "Prepositive pronouns such as ⲛ̀ⲑⲟϥ, ⲛ̀ⲑⲟⲥ, and ⲛ̀ⲑⲱⲟⲩ that can be used for emphasis alongside the standard nexus-pronoun pattern."
+                  "text": "Prepositive pronouns such as "
+                },
+                {
+                  "type": "coptic",
+                  "text": "ⲛ̀ⲑⲟϥ",
+                  "dictionaryEntryId": "cd_1178"
+                },
+                {
+                  "type": "text",
+                  "text": ", "
+                },
+                {
+                  "type": "coptic",
+                  "text": "ⲛ̀ⲑⲟⲥ",
+                  "dictionaryEntryId": "cd_493a"
+                },
+                {
+                  "type": "text",
+                  "text": ", and "
+                },
+                {
+                  "type": "coptic",
+                  "text": "ⲛ̀ⲑⲱⲟⲩ",
+                  "dictionaryEntryId": "cd_493b"
+                },
+                {
+                  "type": "text",
+                  "text": " that can be used for emphasis alongside the standard nexus-pronoun pattern."
                 }
               ]
             }
@@ -6715,7 +6824,34 @@
               "content": [
                 {
                   "type": "text",
-                  "text": "Prepositieve voornaamwoorden zoals ⲛ̀ⲑⲟϥ, ⲛ̀ⲑⲟⲥ en ⲛ̀ⲑⲱⲟⲩ die gebruikt kunnen worden voor nadruk naast het standaardpatroon met verbindingsvoornaamwoorden."
+                  "text": "Prepositieve voornaamwoorden zoals "
+                },
+                {
+                  "type": "coptic",
+                  "text": "ⲛ̀ⲑⲟϥ",
+                  "dictionaryEntryId": "cd_1178"
+                },
+                {
+                  "type": "text",
+                  "text": ", "
+                },
+                {
+                  "type": "coptic",
+                  "text": "ⲛ̀ⲑⲟⲥ",
+                  "dictionaryEntryId": "cd_493a"
+                },
+                {
+                  "type": "text",
+                  "text": " en "
+                },
+                {
+                  "type": "coptic",
+                  "text": "ⲛ̀ⲑⲱⲟⲩ",
+                  "dictionaryEntryId": "cd_493b"
+                },
+                {
+                  "type": "text",
+                  "text": " die gebruikt kunnen worden voor nadruk naast het standaardpatroon met verbindingsvoornaamwoorden."
                 }
               ]
             }

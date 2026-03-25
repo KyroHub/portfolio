@@ -296,12 +296,25 @@ function renderBlock(
     case "table":
       const useRowHeaderLayout = Boolean(block.hideHeader && block.rowHeaderColumnId);
       const useCustomHeaderRows = Boolean(block.headerRows && block.headerRows.length > 0);
+      const useFixedLayout =
+        block.tableLayout === "fixed" || useRowHeaderLayout;
+      const hasExplicitColumnWidths = block.columns.some((column) => column.width);
 
       return (
         <GrammarLessonTable
           key={`${block.type}-${block.id}`}
-          tableClassName={useRowHeaderLayout ? "table-fixed" : undefined}
+          tableClassName={useFixedLayout ? "table-fixed" : undefined}
         >
+          {hasExplicitColumnWidths ? (
+            <colgroup>
+              {block.columns.map((column) => (
+                <col
+                  key={column.id}
+                  style={column.width ? { width: column.width } : undefined}
+                />
+              ))}
+            </colgroup>
+          ) : null}
           {useCustomHeaderRows ? (
             <thead>
               {block.headerRows?.map((headerRow) => (
@@ -383,7 +396,11 @@ function renderBlock(
                   return (
                     <td
                       key={column.id}
-                      className={useRowHeaderLayout ? "w-[22.66%] px-4 py-3 text-center align-middle" : "p-3"}
+                      className={
+                        useRowHeaderLayout
+                          ? "w-[22.66%] px-4 py-3 text-center align-middle"
+                          : "p-3"
+                      }
                     >
                       <GrammarBlockRenderer
                         blocks={row.cells[column.id] ?? []}

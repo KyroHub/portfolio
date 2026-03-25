@@ -183,16 +183,30 @@ export const grammarLesson01CoreConcepts: readonly GrammarConceptDocument[] = [
     definition: {
       en: [
         paragraph(
-          text(
-            "Postpositive enclitic pronouns such as ≡ⲡⲉ, ≡ⲧⲉ, and ≡ⲛⲉ that structure the bipartite nominal sentence.",
-          ),
+          text("Postpositive enclitic pronouns such as "),
+          text("≡"),
+          coptic("ⲡⲉ"),
+          text(", "),
+          text("≡"),
+          coptic("ⲧⲉ"),
+          text(", and "),
+          text("≡"),
+          coptic("ⲛⲉ"),
+          text(" that structure the bipartite nominal sentence."),
         ),
       ],
       nl: [
         paragraph(
-          text(
-            "Postpositieve enclitische voornaamwoorden zoals ≡ⲡⲉ, ≡ⲧⲉ en ≡ⲛⲉ die de tweeledige nominale zin structureren.",
-          ),
+          text("Postpositieve enclitische voornaamwoorden zoals "),
+          text("≡"),
+          coptic("ⲡⲉ"),
+          text(", "),
+          text("≡"),
+          coptic("ⲧⲉ"),
+          text(" en "),
+          text("≡"),
+          coptic("ⲛⲉ"),
+          text(" die de tweeledige nominale zin structureren."),
         ),
       ],
     },
@@ -243,15 +257,25 @@ export const grammarLesson01CoreConcepts: readonly GrammarConceptDocument[] = [
     definition: {
       en: [
         paragraph(
-          text(
-            "Prepositive pronouns such as ⲛ̀ⲑⲟϥ, ⲛ̀ⲑⲟⲥ, and ⲛ̀ⲑⲱⲟⲩ that can be used for emphasis alongside the standard nexus-pronoun pattern.",
-          ),
+          text("Prepositive pronouns such as "),
+          coptic("ⲛ̀ⲑⲟϥ"),
+          text(", "),
+          coptic("ⲛ̀ⲑⲟⲥ"),
+          text(", and "),
+          coptic("ⲛ̀ⲑⲱⲟⲩ"),
+          text(" that can be used for emphasis alongside the standard nexus-pronoun pattern."),
         ),
       ],
       nl: [
         paragraph(
+          text("Prepositieve voornaamwoorden zoals "),
+          coptic("ⲛ̀ⲑⲟϥ"),
+          text(", "),
+          coptic("ⲛ̀ⲑⲟⲥ"),
+          text(" en "),
+          coptic("ⲛ̀ⲑⲱⲟⲩ"),
           text(
-            "Prepositieve voornaamwoorden zoals ⲛ̀ⲑⲟϥ, ⲛ̀ⲑⲟⲥ en ⲛ̀ⲑⲱⲟⲩ die gebruikt kunnen worden voor nadruk naast het standaardpatroon met verbindingsvoornaamwoorden.",
+            " die gebruikt kunnen worden voor nadruk naast het standaardpatroon met verbindingsvoornaamwoorden.",
           ),
         ),
       ],

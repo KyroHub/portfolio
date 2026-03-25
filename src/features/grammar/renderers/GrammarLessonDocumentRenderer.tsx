@@ -33,12 +33,12 @@ function GrammarLessonAbbreviationAppendix({
 }) {
   const title =
     language === "en"
-      ? "Abbreviations used in this lesson"
-      : "Afkortingen in deze les";
+      ? "Abbreviations and symbols used in this lesson"
+      : "Afkortingen en symbolen in deze les";
   const intro =
     language === "en"
-      ? "These short labels appear throughout the lesson tables and explanations."
-      : "Deze korte labels komen doorheen de tabellen en uitleg van de les voor.";
+      ? "These short labels and symbols appear throughout the lesson tables and explanations."
+      : "Deze korte labels en symbolen komen doorheen de tabellen en uitleg van de les voor.";
   const entries = [
     {
       key: "masculine",
@@ -83,6 +83,19 @@ function GrammarLessonAbbreviationAppendix({
         language === "en"
           ? "proper noun"
           : "eigennaam",
+    },
+    {
+      key: "enclitic-particle",
+      label: (
+        <GrammarAbbreviation>
+          <span>≡</span>
+          <span className="font-coptic">ⲁⲃⲅ</span>
+        </GrammarAbbreviation>
+      ),
+      description:
+        language === "en"
+          ? "enclitic particle"
+          : "enclitisch partikel",
     },
   ] as const;
 

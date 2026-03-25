@@ -118,6 +118,44 @@ describe("grammar content registry", () => {
     });
   });
 
+  it("keeps the bare noun vocabulary table evenly split across four columns", () => {
+    const lesson = getGrammarLessonDocumentBySlug("lesson-1");
+    const vocabularySection = lesson?.sections.find(
+      (section) => section.slug === "vocabulary-bare-nouns",
+    );
+
+    const englishTable = vocabularySection?.blocks.en[1];
+    const dutchTable = vocabularySection?.blocks.nl[1];
+
+    expect(englishTable?.type).toBe("table");
+    expect(dutchTable?.type).toBe("table");
+
+    if (!englishTable || englishTable.type !== "table") {
+      return;
+    }
+
+    if (!dutchTable || dutchTable.type !== "table") {
+      return;
+    }
+
+    expect(englishTable.tableLayout).toBe("fixed");
+    expect(dutchTable.tableLayout).toBe("fixed");
+    expect(englishTable.columns.map((column) => column.width)).toEqual([
+      "25%",
+      "25%",
+      "25%",
+      "25%",
+    ]);
+    expect(dutchTable.columns.map((column) => column.width)).toEqual([
+      "25%",
+      "25%",
+      "25%",
+      "25%",
+    ]);
+    expect(englishTable.headerRows?.[0]?.cells.map((cell) => cell.colSpan)).toEqual([2, 2]);
+    expect(dutchTable.headerRows?.[0]?.cells.map((cell) => cell.colSpan)).toEqual([2, 2]);
+  });
+
   it("wires concept and source references into examples and footnotes", () => {
     const snapshot = getGrammarDatasetSnapshot();
     const zeroDeterminationExample = snapshot.examples.find(

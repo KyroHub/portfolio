@@ -10,7 +10,8 @@ export type GrammarLessonAbbreviationAnchorKey =
   | "singular"
   | "plural"
   | "ipa"
-  | "nm";
+  | "nm"
+  | "enclitic-particle";
 
 function normalizeReferenceAnchorSegment(value: string) {
   return value

@@ -271,6 +271,7 @@ export const grammarLesson01Document: GrammarLessonDocument = {
           {
             type: "table",
             id: `${lessonId}.section.vocabulary-bare-nouns.table`,
+            tableLayout: "fixed",
             headerRows: [
               {
                 id: `${lessonId}.section.vocabulary-bare-nouns.header-row`,
@@ -299,10 +300,10 @@ export const grammarLesson01Document: GrammarLessonDocument = {
               },
             ],
             columns: [
-              { id: "masculineWord", label: { en: "", nl: "" } },
-              { id: "masculineMeaning", label: { en: "", nl: "" } },
-              { id: "feminineWord", label: { en: "", nl: "" } },
-              { id: "feminineMeaning", label: { en: "", nl: "" } },
+              { id: "masculineWord", label: { en: "", nl: "" }, width: "25%" },
+              { id: "masculineMeaning", label: { en: "", nl: "" }, width: "25%" },
+              { id: "feminineWord", label: { en: "", nl: "" }, width: "25%" },
+              { id: "feminineMeaning", label: { en: "", nl: "" }, width: "25%" },
             ],
             rows: [
               {
@@ -404,6 +405,7 @@ export const grammarLesson01Document: GrammarLessonDocument = {
           {
             type: "table",
             id: `${lessonId}.section.vocabulary-bare-nouns.table`,
+            tableLayout: "fixed",
             headerRows: [
               {
                 id: `${lessonId}.section.vocabulary-bare-nouns.header-row.nl`,
@@ -432,10 +434,10 @@ export const grammarLesson01Document: GrammarLessonDocument = {
               },
             ],
             columns: [
-              { id: "masculineWord", label: { en: "", nl: "" } },
-              { id: "masculineMeaning", label: { en: "", nl: "" } },
-              { id: "feminineWord", label: { en: "", nl: "" } },
-              { id: "feminineMeaning", label: { en: "", nl: "" } },
+              { id: "masculineWord", label: { en: "", nl: "" }, width: "25%" },
+              { id: "masculineMeaning", label: { en: "", nl: "" }, width: "25%" },
+              { id: "feminineWord", label: { en: "", nl: "" }, width: "25%" },
+              { id: "feminineMeaning", label: { en: "", nl: "" }, width: "25%" },
             ],
             rows: [
               {

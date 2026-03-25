@@ -166,6 +166,7 @@ export type GrammarBlock =
       columns: GrammarTableColumn[];
       headerRows?: GrammarTableHeaderRow[];
       rows: GrammarTableRow[];
+      tableLayout?: "auto" | "fixed";
       hideHeader?: boolean;
       rowHeaderColumnId?: string;
     }
@@ -182,6 +183,7 @@ export type GrammarTableColumn = {
   id: string;
   label: Localized<string>;
   inlineLabel?: Localized<GrammarInline[]>;
+  width?: string;
 };
 
 export type GrammarTableHeaderRow = {
