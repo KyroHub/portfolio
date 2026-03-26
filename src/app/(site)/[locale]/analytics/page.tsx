@@ -27,14 +27,7 @@ export async function generateMetadata({
   });
 }
 
-export default async function AnalyticsPage({
-  params,
-}: {
-  params: Promise<{ locale: string }>;
-}) {
-  const { locale } = await params;
-  const resolvedLocale = isPublicLocale(locale) ? locale : "en";
-
+export default function AnalyticsPage() {
   return (
     <AnalyticsPageClient snapshots={createAnalyticsSnapshots(getDictionary())} />
   );

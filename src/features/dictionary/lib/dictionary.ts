@@ -1,6 +1,5 @@
 import { cache } from "react";
 import type { LexicalEntry } from "@/features/dictionary/types";
-import type { Language } from "@/types/i18n";
 import { assertServerOnly } from "../../../lib/server/assertServerOnly.ts";
 import { readProjectJsonFile } from "../../../lib/server/projectFiles.ts";
 

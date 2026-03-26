@@ -27,7 +27,7 @@ export interface LexicalEntry {
   english_meanings: string[];
   dutch_meanings?: string[];
   greek_equivalents: string[];
-  bohairicParadigmData?: any;
+  bohairicParadigmData?: unknown;
   raw: {
     word: string;
     meaning: string;
