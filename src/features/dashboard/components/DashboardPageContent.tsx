@@ -5,6 +5,8 @@ import { Badge } from "@/components/Badge";
 import { PageHeader } from "@/components/PageHeader";
 import { PageShell, pageShellAccents } from "@/components/PageShell";
 import { SurfacePanel } from "@/components/SurfacePanel";
+import { DictionaryFavoritesOverview } from "@/features/dictionary/components/DictionaryFavoritesOverview";
+import { getDictionaryEntryById } from "@/features/dictionary/lib/dictionary";
 import { SubmissionCard } from "@/features/submissions/components/SubmissionCard";
 import { SubmissionEmptyState } from "@/features/submissions/components/SubmissionEmptyState";
 import { SubmissionFeedbackPanel } from "@/features/submissions/components/SubmissionFeedbackPanel";
@@ -22,6 +24,7 @@ import { antinoou } from "@/lib/fonts";
 import { getDashboardPath } from "@/lib/locale";
 import {
   getProfile,
+  getUserEntryFavorites,
   getUserLessonBookmarks,
   getUserLessonNotes,
   getUserLessonProgressRows,
@@ -52,15 +55,21 @@ export async function DashboardPageContent({
     submissions,
     lessonProgressRows,
     sectionProgressRows,
+    entryFavorites,
     lessonBookmarks,
     lessonNotes,
   ] = await Promise.all([
     getUserSubmissions(supabase, user.id),
     getUserLessonProgressRows(supabase, user.id),
     getUserSectionProgressRows(supabase, user.id),
+    getUserEntryFavorites(supabase, user.id),
     getUserLessonBookmarks(supabase, user.id),
     getUserLessonNotes(supabase, user.id),
   ]);
+  const savedDictionaryEntries = entryFavorites.map((favorite) => ({
+    entry: getDictionaryEntryById(favorite.entry_id),
+    favorite,
+  }));
 
   const grammarLessonSummaries = listPublishedGrammarLessons()
     .map((lesson) => getPublishedGrammarLessonBundleBySlug(lesson.slug))
@@ -154,6 +163,11 @@ export async function DashboardPageContent({
           lessonSummaries={grammarLessonSummaries}
         />
 
+        <DictionaryFavoritesOverview
+          favorites={savedDictionaryEntries}
+          language={locale}
+        />
+
         <div className="space-y-8">
           <h3 className="text-2xl font-bold tracking-tight text-stone-800 dark:text-stone-200">
             {copy.recentExercisesTitle}
@@ -189,4 +203,3 @@ export async function DashboardPageContent({
     </PageShell>
   );
 }
-

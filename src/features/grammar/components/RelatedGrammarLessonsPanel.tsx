@@ -1,20 +1,23 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { Badge } from "@/components/Badge";
 import { SurfacePanel } from "@/components/SurfacePanel";
 import { getGrammarLessonPath } from "@/features/grammar/lib/grammarPaths";
 import type { GrammarLessonReference } from "@/features/grammar/lib/grammarContentGraph";
 import type { Language } from "@/types/i18n";
 
 type RelatedGrammarLessonsPanelProps = {
+  contained?: boolean;
   description: string;
+  eyebrow?: string;
   language: Language;
   lessons: readonly GrammarLessonReference[];
   title: string;
 };
 
 export function RelatedGrammarLessonsPanel({
+  contained = false,
   description,
+  eyebrow,
   language,
   lessons,
   title,
@@ -23,16 +26,27 @@ export function RelatedGrammarLessonsPanel({
     return null;
   }
 
-  return (
-    <section className="space-y-5">
-      <div className="space-y-2">
-        <h2 className="text-2xl font-bold tracking-tight text-stone-800 dark:text-stone-100">
+  const sectionContent = (
+    <>
+      <div className={contained ? "space-y-3" : "space-y-2"}>
+        {eyebrow ? (
+          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-stone-500 dark:text-stone-400">
+            {eyebrow}
+          </p>
+        ) : null}
+        <h2
+          className={
+            contained
+              ? "text-xl font-semibold tracking-tight text-stone-800 dark:text-stone-100 md:text-2xl"
+              : "text-2xl font-bold tracking-tight text-stone-800 dark:text-stone-100"
+          }
+        >
           {title}
         </h2>
         <p className="text-stone-500 dark:text-stone-400">{description}</p>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2">
+      <div className={`grid gap-4 ${lessons.length > 1 ? "md:grid-cols-2" : ""}`}>
         {lessons.map((lesson) => (
           <Link
             key={lesson.id}
@@ -41,12 +55,15 @@ export function RelatedGrammarLessonsPanel({
           >
             <SurfacePanel
               rounded="3xl"
+              shadow={contained ? "soft" : "panel"}
+              variant={contained ? "elevated" : "default"}
               className="flex h-full flex-col justify-between p-5 transition-colors hover:border-sky-300 dark:hover:border-sky-700"
             >
               <div className="space-y-3">
-                <Badge tone="accent" size="xs">
+                <span className="inline-flex w-fit rounded-full border border-sky-200 bg-sky-50 px-3 py-1 text-xs font-semibold text-sky-700 dark:border-sky-900/60 dark:bg-sky-950/40 dark:text-sky-300">
+                  {language === "nl" ? "Les" : "Lesson"}{" "}
                   {String(lesson.number).padStart(2, "0")}
-                </Badge>
+                </span>
                 <div>
                   <h3 className="text-lg font-semibold text-stone-800 dark:text-stone-100">
                     {lesson.title[language]}
@@ -65,6 +82,20 @@ export function RelatedGrammarLessonsPanel({
           </Link>
         ))}
       </div>
+    </>
+  );
+
+  if (contained) {
+    return (
+      <SurfacePanel as="section" rounded="3xl" variant="subtle" className="p-6 md:p-7">
+        <div className="space-y-5">{sectionContent}</div>
+      </SurfacePanel>
+    );
+  }
+
+  return (
+    <section className="space-y-5">
+      {sectionContent}
     </section>
   );
 }

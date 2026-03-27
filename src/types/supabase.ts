@@ -9,6 +9,73 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      entry_favorites: {
+        Row: {
+          created_at: string;
+          entry_id: string;
+          user_id: string;
+        };
+        Insert: {
+          created_at?: string;
+          entry_id: string;
+          user_id: string;
+        };
+        Update: {
+          created_at?: string;
+          entry_id?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            columns: ["user_id"];
+            foreignKeyName: "entry_favorites_user_id_fkey";
+            isOneToOne: false;
+            referencedColumns: ["id"];
+            referencedRelation: "profiles";
+          },
+        ];
+      };
+      entry_reports: {
+        Row: {
+          commentary: string;
+          created_at: string;
+          entry_headword: string;
+          entry_id: string;
+          id: string;
+          reason: "grammar" | "other" | "relation" | "translation" | "typo";
+          status: "dismissed" | "open" | "resolved" | "reviewed";
+          user_id: string;
+        };
+        Insert: {
+          commentary: string;
+          created_at?: string;
+          entry_headword: string;
+          entry_id: string;
+          id?: string;
+          reason: "grammar" | "other" | "relation" | "translation" | "typo";
+          status?: "dismissed" | "open" | "resolved" | "reviewed";
+          user_id: string;
+        };
+        Update: {
+          commentary?: string;
+          created_at?: string;
+          entry_headword?: string;
+          entry_id?: string;
+          id?: string;
+          reason?: "grammar" | "other" | "relation" | "translation" | "typo";
+          status?: "dismissed" | "open" | "resolved" | "reviewed";
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            columns: ["user_id"];
+            foreignKeyName: "entry_reports_user_id_fkey";
+            isOneToOne: false;
+            referencedColumns: ["id"];
+            referencedRelation: "profiles";
+          },
+        ];
+      };
       profiles: {
         Row: {
           avatar_url: string | null;

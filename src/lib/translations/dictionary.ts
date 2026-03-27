@@ -46,6 +46,46 @@ export const dictionaryMessages = defineMessages({
     "entry.relation.feminineCounterpart": "Feminine counterpart",
     "entry.relation.derivedSubentry": "Derived subentry",
     "entry.relation.paradigmMember": "Paradigm member",
+    "entry.actions.eyebrow": "Personal Tools",
+    "entry.actions.description":
+      "Save this entry for later or send a quick note when something needs attention.",
+    "entry.actions.authUnavailable":
+      "Entry actions are unavailable right now.",
+    "entry.actions.loginPrompt":
+      "Log in or sign up to save entries and report issues.",
+    "entry.actions.favorite": "Save entry",
+    "entry.actions.favorited": "Saved entry",
+    "entry.actions.favoriteLoading": "Loading...",
+    "entry.actions.favoriteSaving": "Saving...",
+    "entry.actions.favoriteRemoving": "Removing...",
+    "entry.actions.favoriteError.loadFailed":
+      "Could not load your saved entry state.",
+    "entry.actions.favoriteError.notConfigured":
+      "Entry favourites are not configured yet.",
+    "entry.actions.favoriteError.unavailable":
+      "Entry favourites are unavailable right now.",
+    "entry.actions.favoriteError.updateFailed":
+      "Could not update your saved entries right now.",
+    "entry.actions.report": "Report entry",
+    "entry.actions.reportClose": "Hide report form",
+    "entry.actions.reportTitle": "Report an issue",
+    "entry.actions.reportDescription":
+      "If you spot a typo, unclear meaning, or incorrect relation, send a short note so it can be reviewed.",
+    "entry.actions.reasonLabel": "Reason",
+    "entry.actions.reasonPlaceholder": "Choose a reason",
+    "entry.actions.reason.typo": "Typo or spelling issue",
+    "entry.actions.reason.translation": "Translation issue",
+    "entry.actions.reason.grammar": "Grammar issue",
+    "entry.actions.reason.relation": "Wrong relation or grouping",
+    "entry.actions.reason.other": "Other",
+    "entry.actions.commentaryLabel": "Commentary",
+    "entry.actions.commentaryPlaceholder":
+      "Describe what looks wrong and, if useful, suggest the correction.",
+    "entry.actions.commentaryHint":
+      "Please include enough detail to verify the issue quickly.",
+    "entry.actions.submitReport": "Send report",
+    "entry.actions.submittingReport": "Sending...",
+    "entry.actions.cancelReport": "Cancel",
 
     "analytics.back": "Back to Dictionary Search",
     "analytics.filter": "Filter Analytics",
@@ -105,6 +145,46 @@ export const dictionaryMessages = defineMessages({
     "entry.relation.feminineCounterpart": "Vrouwelijke tegenhanger",
     "entry.relation.derivedSubentry": "Afgeleid sublemma",
     "entry.relation.paradigmMember": "Paradigmalid",
+    "entry.actions.eyebrow": "Persoonlijke acties",
+    "entry.actions.description":
+      "Sla dit lemma op voor later of stuur een korte melding als er iets nagekeken moet worden.",
+    "entry.actions.authUnavailable":
+      "Lemma-acties zijn momenteel niet beschikbaar.",
+    "entry.actions.loginPrompt":
+      "Log in of maak een account aan om lemma's op te slaan en te melden.",
+    "entry.actions.favorite": "Lemma opslaan",
+    "entry.actions.favorited": "Lemma opgeslagen",
+    "entry.actions.favoriteLoading": "Laden...",
+    "entry.actions.favoriteSaving": "Bezig met opslaan...",
+    "entry.actions.favoriteRemoving": "Bezig met verwijderen...",
+    "entry.actions.favoriteError.loadFailed":
+      "Je opgeslagen lemma-status kon niet worden geladen.",
+    "entry.actions.favoriteError.notConfigured":
+      "Lemma-favorieten zijn nog niet geconfigureerd.",
+    "entry.actions.favoriteError.unavailable":
+      "Lemma-favorieten zijn momenteel niet beschikbaar.",
+    "entry.actions.favoriteError.updateFailed":
+      "Je opgeslagen lemma's konden nu niet worden bijgewerkt.",
+    "entry.actions.report": "Lemma melden",
+    "entry.actions.reportClose": "Meldformulier sluiten",
+    "entry.actions.reportTitle": "Meld een probleem",
+    "entry.actions.reportDescription":
+      "Zie je een typefout, onduidelijke betekenis of foute relatie, stuur dan een korte toelichting zodat dit nagekeken kan worden.",
+    "entry.actions.reasonLabel": "Reden",
+    "entry.actions.reasonPlaceholder": "Kies een reden",
+    "entry.actions.reason.typo": "Typefout of spellingprobleem",
+    "entry.actions.reason.translation": "Vertaalprobleem",
+    "entry.actions.reason.grammar": "Grammaticaal probleem",
+    "entry.actions.reason.relation": "Foute relatie of groepering",
+    "entry.actions.reason.other": "Iets anders",
+    "entry.actions.commentaryLabel": "Toelichting",
+    "entry.actions.commentaryPlaceholder":
+      "Beschrijf wat er niet klopt en geef eventueel de juiste vorm of betekenis mee.",
+    "entry.actions.commentaryHint":
+      "Voeg genoeg context toe zodat het probleem snel geverifieerd kan worden.",
+    "entry.actions.submitReport": "Melding verzenden",
+    "entry.actions.submittingReport": "Bezig met verzenden...",
+    "entry.actions.cancelReport": "Annuleren",
 
     "analytics.back": "Terug naar woordenboek",
     "analytics.filter": "Analytics filteren",

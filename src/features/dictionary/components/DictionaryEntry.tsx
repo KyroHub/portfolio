@@ -1,5 +1,6 @@
 "use client";
 
+import type { ReactNode } from "react";
 import Link from "next/link";
 import { Badge } from "@/components/Badge";
 import { useLanguage } from "@/components/LanguageProvider";
@@ -20,6 +21,7 @@ type DictionaryEntryCardProps = {
   selectedDialect?: DialectFilter;
   headingLevel?: "h1" | "h2";
   linkHeadword?: boolean;
+  actions?: ReactNode;
 };
 
 type DialectEntryTuple = [
@@ -46,6 +48,7 @@ function formatDialectForms(forms: DialectEntryTuple[1], headwordFallback: strin
 }
 
 export default function DictionaryEntryCard({
+  actions,
   entry,
   query = "",
   selectedDialect = DEFAULT_DICTIONARY_DIALECT_FILTER,
@@ -164,6 +167,12 @@ export default function DictionaryEntryCard({
           </div>
         )}
       </div>
+
+      {actions ? (
+        <div className="mt-7 border-t border-stone-200 pt-5 dark:border-stone-800/50">
+          {actions}
+        </div>
+      ) : null}
 
       {remainingDialects.length > 0 && (
         <div className="mt-7 pt-5 border-t border-stone-200 dark:border-stone-800/50">

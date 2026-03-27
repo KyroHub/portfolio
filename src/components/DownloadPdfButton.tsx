@@ -1,9 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Download, Lock } from "lucide-react";
+import { AuthGatedActionButton } from "@/components/AuthGatedActionButton";
 import { useLanguage } from "@/components/LanguageProvider";
-import { createClient } from "@/lib/supabase/client";
+import { cx } from "@/lib/classes";
+import { useOptionalAuthGate } from "@/lib/supabase/useOptionalAuthGate";
 import type { jsPDF as JsPdfInstance } from "jspdf";
 
 type PdfLifecycleCallback = () => Promise<void> | void;
@@ -49,26 +51,13 @@ export function DownloadPdfButton({
   afterCapture,
 }: DownloadPdfButtonProps) {
   const { language } = useLanguage();
-  const [isReady, setIsReady] = useState(false);
-  const [isLogged, setIsLogged] = useState(false);
+  const authGate = useOptionalAuthGate();
   const [isGenerating, setIsGenerating] = useState(false);
   const copy = PDF_BUTTON_COPY[language];
 
-  useEffect(() => {
-    const supabase = createClient();
-    if (supabase) {
-      supabase.auth.getUser().then(({ data }) => {
-        setIsLogged(!!data.user);
-        setIsReady(true);
-      });
-    } else {
-      setIsReady(true);
-    }
-  }, []);
-
   const handleDownload = async () => {
-    if (!isLogged) return;
-    
+    if (!authGate.isAuthenticated) return;
+
     const targetElement = document.getElementById(targetId);
     if (!targetElement) return;
 
@@ -160,33 +149,23 @@ export function DownloadPdfButton({
     }
   };
 
-  if (!isReady) return null;
-
-  if (!isLogged) {
-    return (
-      <div className="relative group inline-block">
-        <button 
-          disabled 
-          className="btn-secondary gap-2 px-4 opacity-50 cursor-not-allowed"
-        >
+  return (
+    <AuthGatedActionButton
+      className={cx("btn-secondary gap-2 px-4", isGenerating && "opacity-70")}
+      disabled={isGenerating}
+      isAuthenticated={authGate.isAuthenticated}
+      isReady={authGate.isReady}
+      lockedContent={
+        <>
           <Lock className="h-4 w-4" />
           {copy.download}
-        </button>
-        <div className="absolute top-full right-0 transform mt-2 w-max max-w-xs text-center text-xs bg-stone-800 text-white rounded p-2 opacity-0 group-hover:opacity-100 transition-opacity z-50 shadow-lg pointer-events-none">
-          {copy.loginPrompt}
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <button 
+        </>
+      }
+      lockedMessage={copy.loginPrompt}
       onClick={handleDownload}
-      disabled={isGenerating}
-      className={`btn-secondary gap-2 px-4 ${isGenerating ? "opacity-70" : ""}`}
     >
       <Download className={`h-4 w-4 ${isGenerating ? "animate-bounce" : ""}`} />
       {isGenerating ? copy.generating : copy.download}
-    </button>
+    </AuthGatedActionButton>
   );
 }

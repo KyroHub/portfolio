@@ -101,7 +101,7 @@ export default function EntryRelationsPanel({
   }
 
   return (
-    <SurfacePanel className="mt-8 p-6 md:p-7">
+    <SurfacePanel className="p-6 md:p-7">
       <div className="space-y-6">
         {parentEntry ? (
           <section className="space-y-3">

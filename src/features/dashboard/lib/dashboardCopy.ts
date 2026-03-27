@@ -38,6 +38,23 @@ const DASHBOARD_COPY = {
       continueLesson: "Continue lesson",
       startLesson: "Start lesson",
     },
+    dictionary: {
+      title: "Saved dictionary entries",
+      description:
+        "Keep quick access to the lemmas you bookmarked while studying lessons or checking vocabulary.",
+      totalSaved: "Saved entries",
+      availableEntries: "Available now",
+      missingEntries: "Archived or changed",
+      savedBadge: "Saved",
+      missingBadge: "Unavailable",
+      savedOnPrefix: "Saved on",
+      viewEntry: "Open entry",
+      removedNotice:
+        "This entry no longer appears in the current dictionary dataset, but the bookmark is kept for reference.",
+      noSavedTitle: "No saved entries yet",
+      noSavedDescription:
+        "Use the heart button on any dictionary entry to keep it close at hand in your dashboard.",
+    },
     account: {
       eyebrow: "Account",
       title: "Settings",
@@ -150,6 +167,23 @@ const DASHBOARD_COPY = {
       notStartedYet: "Nog niet begonnen",
       continueLesson: "Ga verder met de les",
       startLesson: "Start les",
+    },
+    dictionary: {
+      title: "Opgeslagen woordenboeklemma's",
+      description:
+        "Hou de lemma's die je tijdens het studeren of opzoeken bewaart snel binnen bereik.",
+      totalSaved: "Opgeslagen lemma's",
+      availableEntries: "Nu beschikbaar",
+      missingEntries: "Gearchiveerd of gewijzigd",
+      savedBadge: "Opgeslagen",
+      missingBadge: "Niet beschikbaar",
+      savedOnPrefix: "Opgeslagen op",
+      viewEntry: "Lemma openen",
+      removedNotice:
+        "Dit lemma staat niet meer in de huidige woordenboekdataset, maar de bladwijzer blijft bewaard als referentie.",
+      noSavedTitle: "Nog geen opgeslagen lemma's",
+      noSavedDescription:
+        "Gebruik het hartje op een woordenboeklemma om het hier in je dashboard bij te houden.",
     },
     account: {
       eyebrow: "Account",
