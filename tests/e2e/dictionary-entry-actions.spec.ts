@@ -13,7 +13,7 @@ async function loginToEntryPage(page: Page) {
   await expect(page).toHaveURL(new RegExp(`${ENTRY_PATH}$`));
 }
 
-test("signed-out users can tap locked dictionary entry actions to reveal the login prompt", async ({
+test("signed-out desktop users can hover locked dictionary entry actions to reveal the login prompt", async ({
   page,
 }) => {
   await page.goto(ENTRY_PATH);
@@ -37,6 +37,28 @@ test("signed-out users can tap locked dictionary entry actions to reveal the log
   await expect(page.getByText("Share preview")).toBeVisible();
   await expect(page.getByRole("button", { name: "Copy share text" })).toBeVisible();
   await expect(page.getByRole("link", { name: "Share on X" })).toBeVisible();
+
+  await saveButton.hover();
+  await expect(lockedPrompt).toBeVisible();
+});
+
+test("signed-out mobile users can tap locked dictionary entry actions to reveal the login prompt", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto(ENTRY_PATH);
+
+  const saveButton = page.getByRole("button", { name: "Save entry" });
+  const reportButton = page.getByRole("button", { name: "Report entry" });
+  const lockedPrompt = page
+    .locator('[role="tooltip"]')
+    .filter({ hasText: "Log in or sign up to save entries and report issues." })
+    .first();
+
+  await expect(saveButton).toBeEnabled();
+  await expect(reportButton).toBeEnabled();
+  await expect(saveButton).toHaveAttribute("data-locked", "true");
+  await expect(reportButton).toHaveAttribute("data-locked", "true");
 
   await saveButton.click();
   await expect(lockedPrompt).toBeVisible();
