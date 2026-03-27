@@ -2,11 +2,7 @@ import type { Metadata } from "next";
 import { LegalDocumentPage } from "@/features/legal/components/LegalDocumentPage";
 import { getTermsDocument } from "@/features/legal/lib/legalDocuments";
 import { createLocalizedPageMetadata } from "@/lib/metadata";
-import { isPublicLocale } from "@/lib/locale";
-
-function resolveLocale(locale: string) {
-  return isPublicLocale(locale) ? locale : "en";
-}
+import { resolvePublicLocale } from "@/lib/publicLocaleRouting";
 
 export async function generateMetadata({
   params,
@@ -14,7 +10,7 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  const resolvedLocale = resolveLocale(locale);
+  const resolvedLocale = resolvePublicLocale(locale);
   const document = getTermsDocument(resolvedLocale);
 
   return createLocalizedPageMetadata({
@@ -31,5 +27,5 @@ export default async function LocalizedTermsPage({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  return <LegalDocumentPage {...getTermsDocument(resolveLocale(locale))} />;
+  return <LegalDocumentPage {...getTermsDocument(resolvePublicLocale(locale))} />;
 }

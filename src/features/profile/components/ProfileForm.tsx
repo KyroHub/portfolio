@@ -24,6 +24,7 @@ export function ProfileForm({
   const copy = getDashboardCopy(language)
   const [isUploading, setIsUploading] = useState(false)
   const [avatarUrl, setAvatarUrl] = useState<string | null>(profile.avatar_url)
+  const [pendingAvatarStoragePath, setPendingAvatarStoragePath] = useState<string | null>(null)
   const [status, setStatus] = useState<{ message: string; type: 'success' | 'error' } | null>(null)
   const supabase = createClient()
 
@@ -55,16 +56,6 @@ export function ProfileForm({
       const fileExt = file.name.split('.').pop() || 'jpeg'
       const filePath = `${profile.id}/${crypto.randomUUID()}.${fileExt}`
 
-      const { data: existingFiles } = await supabase.storage
-        .from('avatars')
-        .list(profile.id, { limit: 100 })
-
-      if (existingFiles && existingFiles.length > 0) {
-        await supabase.storage
-          .from('avatars')
-          .remove(existingFiles.map((existingFile) => `${profile.id}/${existingFile.name}`))
-      }
-
       const { error: uploadError } = await supabase.storage
         .from('avatars')
         .upload(filePath, compressedFile)
@@ -75,6 +66,7 @@ export function ProfileForm({
 
       const { data } = supabase.storage.from('avatars').getPublicUrl(filePath)
       setAvatarUrl(data.publicUrl)
+      setPendingAvatarStoragePath(filePath)
       
       // Auto-clear the "Uploading to server..." success message
       setTimeout(() => setStatus(null), 3000)
@@ -90,12 +82,41 @@ export function ProfileForm({
 
   async function handleSubmit(formData: FormData) {
     setStatus(null)
-    if (avatarUrl) {
-      formData.append('avatar_url', avatarUrl)
+    if (pendingAvatarStoragePath && avatarUrl) {
+      formData.set('avatar_url', avatarUrl)
     }
     
     const result = await updateProfile(formData)
     if (result.success) {
+      if (supabase && pendingAvatarStoragePath) {
+        try {
+          const { data: existingFiles, error: listError } = await supabase.storage
+            .from('avatars')
+            .list(profile.id, { limit: 100 })
+
+          if (listError) {
+            throw listError
+          }
+
+          const staleFilePaths = (existingFiles ?? [])
+            .map((existingFile) => `${profile.id}/${existingFile.name}`)
+            .filter((filePath) => filePath !== pendingAvatarStoragePath)
+
+          if (staleFilePaths.length > 0) {
+            const { error: removeError } = await supabase.storage
+              .from('avatars')
+              .remove(staleFilePaths)
+
+            if (removeError) {
+              throw removeError
+            }
+          }
+        } catch (error) {
+          console.warn('Failed to prune old avatars after profile update.', error)
+        }
+      }
+
+      setPendingAvatarStoragePath(null)
       setStatus({ message: copy.profile.updatedSuccess, type: 'success' })
       setTimeout(() => setStatus(null), 3000)
     } else {

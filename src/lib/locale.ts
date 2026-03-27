@@ -85,6 +85,18 @@ export function switchLocalePath(pathname: string, nextLocale: Language) {
   return getLocalizedPath(nextLocale, stripLocaleFromPathname(pathname));
 }
 
+export function appendSearchAndHash(pathname: string, search = "", hash = "") {
+  const normalizedPathname = normalizePath(pathname);
+  const normalizedSearch = !search
+    ? ""
+    : search.startsWith("?")
+      ? search
+      : `?${search}`;
+  const normalizedHash = !hash ? "" : hash.startsWith("#") ? hash : `#${hash}`;
+
+  return `${normalizedPathname}${normalizedSearch}${normalizedHash}`;
+}
+
 export function createLanguageAlternates(path: string) {
   return Object.fromEntries(
     PUBLIC_LOCALES.map((locale) => [locale, getLocalizedPath(locale, path)]),

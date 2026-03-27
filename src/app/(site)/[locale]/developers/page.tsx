@@ -6,11 +6,11 @@ import { PageShell, pageShellAccents } from "@/components/PageShell";
 import { SurfacePanel } from "@/components/SurfacePanel";
 import { getTranslation } from "@/lib/i18n";
 import { createLocalizedPageMetadata } from "@/lib/metadata";
+import { resolvePublicLocale } from "@/lib/publicLocaleRouting";
 import {
   getDevelopersPath,
   getGrammarPath,
   getLocalizedHomePath,
-  isPublicLocale,
 } from "@/lib/locale";
 import {
   createBreadcrumbStructuredData,
@@ -195,7 +195,7 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  const resolvedLocale = isPublicLocale(locale) ? locale : "en";
+  const resolvedLocale = resolvePublicLocale(locale);
   const copy = developerCopy[resolvedLocale];
 
   return createLocalizedPageMetadata({
@@ -212,7 +212,7 @@ export default async function DevelopersPage({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  const resolvedLocale = isPublicLocale(locale) ? locale : "en";
+  const resolvedLocale = resolvePublicLocale(locale);
   const copy = developerCopy[resolvedLocale];
 
   return (

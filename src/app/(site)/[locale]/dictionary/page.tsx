@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import StructuredData from "@/components/StructuredData";
 import DictionaryPageClient from "@/features/dictionary/components/DictionaryPageClient";
 import { createLocalizedPageMetadata } from "@/lib/metadata";
-import { isPublicLocale } from "@/lib/locale";
+import { resolvePublicLocale } from "@/lib/publicLocaleRouting";
 import { siteConfig } from "@/lib/site";
 import { createDictionaryPageStructuredData } from "@/lib/structuredData";
 
@@ -24,7 +24,7 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  const resolvedLocale = isPublicLocale(locale) ? locale : "en";
+  const resolvedLocale = resolvePublicLocale(locale);
 
   return createLocalizedPageMetadata({
     title:
@@ -43,7 +43,7 @@ export default async function DictionaryPage({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  const resolvedLocale = isPublicLocale(locale) ? locale : "en";
+  const resolvedLocale = resolvePublicLocale(locale);
 
   return (
     <>

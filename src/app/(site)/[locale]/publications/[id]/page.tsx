@@ -17,9 +17,9 @@ import {
   getLocalizedHomePath,
   getOpenGraphLocale,
   getPublicationsPath,
-  isPublicLocale,
 } from "@/lib/locale";
 import { buildPageTitle, siteConfig } from "@/lib/site";
+import { resolvePublicLocale } from "@/lib/publicLocaleRouting";
 import {
   createBreadcrumbStructuredData,
   createPublicationStructuredData,
@@ -39,9 +39,7 @@ export async function generateMetadata({
   params: Promise<{ locale: string; id: string }>;
 }): Promise<Metadata> {
   const resolvedParams = await params;
-  const locale = isPublicLocale(resolvedParams.locale)
-    ? resolvedParams.locale
-    : "en";
+  const locale = resolvePublicLocale(resolvedParams.locale);
   const publication = getPublicationById(resolvedParams.id);
 
   if (!publication) {
@@ -107,9 +105,7 @@ export default async function PublicationDetailPage({
   params: Promise<{ locale: string; id: string }>;
 }) {
   const resolvedParams = await params;
-  const locale = isPublicLocale(resolvedParams.locale)
-    ? resolvedParams.locale
-    : "en";
+  const locale = resolvePublicLocale(resolvedParams.locale);
   const publication = getPublicationById(resolvedParams.id);
 
   if (!publication) {

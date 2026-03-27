@@ -14,9 +14,9 @@ import {
   getGrammarPath,
   getLocalizedHomePath,
   getOpenGraphLocale,
-  isPublicLocale,
 } from "@/lib/locale";
 import { getTranslation } from "@/lib/i18n";
+import { resolvePublicLocale } from "@/lib/publicLocaleRouting";
 import { buildPageTitle, siteConfig } from "@/lib/site";
 import {
   createBreadcrumbStructuredData,
@@ -37,9 +37,7 @@ export async function generateMetadata({
   params: Promise<{ locale: string; slug: string }>;
 }): Promise<Metadata> {
   const resolvedParams = await params;
-  const locale = isPublicLocale(resolvedParams.locale)
-    ? resolvedParams.locale
-    : "en";
+  const locale = resolvePublicLocale(resolvedParams.locale);
   const lessonBundle = getPublishedGrammarLessonBundleBySlug(resolvedParams.slug);
 
   if (!lessonBundle) {
@@ -86,9 +84,7 @@ export default async function GrammarLessonPage({
   params: Promise<{ locale: string; slug: string }>;
 }) {
   const resolvedParams = await params;
-  const locale = isPublicLocale(resolvedParams.locale)
-    ? resolvedParams.locale
-    : "en";
+  const locale = resolvePublicLocale(resolvedParams.locale);
   const lessonBundle = getPublishedGrammarLessonBundleBySlug(resolvedParams.slug);
 
   if (!lessonBundle) {

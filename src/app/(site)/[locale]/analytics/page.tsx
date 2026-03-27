@@ -3,7 +3,7 @@ import AnalyticsPageClient from "@/features/analytics/components/AnalyticsPageCl
 import { createAnalyticsSnapshots } from "@/features/analytics/lib/analytics";
 import { getDictionary } from "@/features/dictionary/lib/dictionary";
 import { createLocalizedPageMetadata } from "@/lib/metadata";
-import { isPublicLocale } from "@/lib/locale";
+import { resolvePublicLocale } from "@/lib/publicLocaleRouting";
 
 function buildAnalyticsDescription(locale: "en" | "nl") {
   return locale === "nl"
@@ -17,7 +17,7 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  const resolvedLocale = isPublicLocale(locale) ? locale : "en";
+  const resolvedLocale = resolvePublicLocale(locale);
 
   return createLocalizedPageMetadata({
     title: resolvedLocale === "nl" ? "Woordenboekstatistieken" : "Dictionary Analytics",

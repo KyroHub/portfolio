@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
-import { redirect } from "next/navigation";
 import { getContactPath } from "@/lib/locale";
 import { createNoIndexMetadata } from "@/lib/metadata";
-import { getPreferredLanguage } from "@/lib/server/preferredLanguage";
+import { redirectToPreferredLocale } from "@/lib/publicLocaleRouting";
 
 export const metadata: Metadata = createNoIndexMetadata({
   title: "Contact Redirect",
@@ -10,6 +9,5 @@ export const metadata: Metadata = createNoIndexMetadata({
 });
 
 export default async function LegacyContactRedirectPage() {
-  const preferredLanguage = await getPreferredLanguage();
-  redirect(getContactPath(preferredLanguage));
+  return redirectToPreferredLocale(getContactPath);
 }

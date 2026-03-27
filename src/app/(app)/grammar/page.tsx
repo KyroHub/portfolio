@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
-import { redirect } from "next/navigation";
 import { getGrammarPath } from "@/lib/locale";
 import { createNoIndexMetadata } from "@/lib/metadata";
-import { getPreferredLanguage } from "@/lib/server/preferredLanguage";
+import { redirectToPreferredLocale } from "@/lib/publicLocaleRouting";
 
 export const metadata: Metadata = createNoIndexMetadata({
   title: "Grammar Redirect",
@@ -10,6 +9,5 @@ export const metadata: Metadata = createNoIndexMetadata({
 });
 
 export default async function LegacyGrammarRedirectPage() {
-  const preferredLanguage = await getPreferredLanguage();
-  redirect(getGrammarPath(preferredLanguage));
+  return redirectToPreferredLocale(getGrammarPath);
 }

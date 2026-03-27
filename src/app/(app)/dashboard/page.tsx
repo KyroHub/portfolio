@@ -1,8 +1,6 @@
-import { redirect } from "next/navigation";
 import { getDashboardPath } from "@/lib/locale";
-import { getPreferredLanguage } from "@/lib/server/preferredLanguage";
+import { redirectToPreferredLocale } from "@/lib/publicLocaleRouting";
 
 export default async function DashboardPage() {
-  const preferredLanguage = await getPreferredLanguage();
-  redirect(getDashboardPath(preferredLanguage));
+  return redirectToPreferredLocale(getDashboardPath);
 }

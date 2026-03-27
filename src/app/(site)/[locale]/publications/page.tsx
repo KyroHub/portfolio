@@ -4,7 +4,8 @@ import PublicationsPageClient from "@/features/publications/components/Publicati
 import { publications } from "@/features/publications/lib/publications";
 import { getTranslation } from "@/lib/i18n";
 import { createLocalizedPageMetadata } from "@/lib/metadata";
-import { getLocalizedHomePath, getPublicationsPath, isPublicLocale } from "@/lib/locale";
+import { getLocalizedHomePath, getPublicationsPath } from "@/lib/locale";
+import { resolvePublicLocale } from "@/lib/publicLocaleRouting";
 import {
   createBreadcrumbStructuredData,
   createPublicationsStructuredData,
@@ -22,7 +23,7 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  const resolvedLocale = isPublicLocale(locale) ? locale : "en";
+  const resolvedLocale = resolvePublicLocale(locale);
 
   return createLocalizedPageMetadata({
     title:
@@ -41,7 +42,7 @@ export default async function PublicationsPage({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  const resolvedLocale = isPublicLocale(locale) ? locale : "en";
+  const resolvedLocale = resolvePublicLocale(locale);
 
   return (
     <>

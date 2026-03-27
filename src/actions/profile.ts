@@ -1,12 +1,26 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import {
+  MAX_PROFILE_FULL_NAME_LENGTH,
+  getAvatarStorageObjectPath,
+  isValidProfileFullName,
+  normalizeProfileFullName,
+} from "@/features/profile/lib/profileValidation";
 import { PUBLIC_LOCALES, getDashboardPath } from "@/lib/locale";
 import { getAuthenticatedServerContext } from "@/lib/supabase/auth";
-import { hasSupabaseRuntimeEnv } from "@/lib/supabase/config";
+import {
+  getSupabaseRuntimeEnv,
+  hasSupabaseRuntimeEnv,
+} from "@/lib/supabase/config";
 
 export async function updateProfile(formData: FormData) {
   if (!hasSupabaseRuntimeEnv()) {
+    return { success: false, error: "Supabase environment missing." };
+  }
+
+  const supabaseEnv = getSupabaseRuntimeEnv();
+  if (!supabaseEnv) {
     return { success: false, error: "Supabase environment missing." };
   }
 
@@ -16,14 +30,58 @@ export async function updateProfile(formData: FormData) {
   }
   const { supabase, user } = authContext;
 
-  const fullName = formData.get("full_name") as string | null;
-  const avatarUrl = formData.get("avatar_url") as string | null;
+  let storageOrigin: string;
+  try {
+    storageOrigin = new URL(supabaseEnv.url).origin;
+  } catch {
+    return { success: false, error: "Supabase environment missing." };
+  }
+
+  const rawFullName = formData.get("full_name");
+  const rawAvatarUrl = formData.get("avatar_url");
+
+  let fullName: string | null | undefined;
+  if (rawFullName !== null) {
+    if (typeof rawFullName !== "string") {
+      return { success: false, error: "Full name is invalid." };
+    }
+
+    fullName = normalizeProfileFullName(rawFullName);
+    if (!isValidProfileFullName(fullName)) {
+      return {
+        success: false,
+        error: `Full name must be ${MAX_PROFILE_FULL_NAME_LENGTH} characters or fewer.`,
+      };
+    }
+  }
+
+  let avatarUrl: string | null | undefined;
+  if (rawAvatarUrl !== null) {
+    if (typeof rawAvatarUrl !== "string") {
+      return { success: false, error: "Avatar URL is invalid." };
+    }
+
+    const trimmedAvatarUrl = rawAvatarUrl.trim();
+
+    if (!trimmedAvatarUrl) {
+      avatarUrl = null;
+    } else if (
+      !getAvatarStorageObjectPath(trimmedAvatarUrl, {
+        storageOrigin,
+        userId: user.id,
+      })
+    ) {
+      return { success: false, error: "Avatar URL is invalid." };
+    } else {
+      avatarUrl = trimmedAvatarUrl;
+    }
+  }
 
   // Ensure users only update the fields permitted (full_name and avatar_url)
   // RLS database rules prevent role manipulation anyway, but avoiding it in the payload is cleaner.
   const updates = {
-    ...(fullName !== null && { full_name: fullName }),
-    ...(avatarUrl !== null && { avatar_url: avatarUrl }),
+    ...(fullName !== undefined && { full_name: fullName }),
+    ...(avatarUrl !== undefined && { avatar_url: avatarUrl }),
   };
 
   const { error } = await supabase

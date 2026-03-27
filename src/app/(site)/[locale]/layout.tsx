@@ -1,26 +1,15 @@
 import "../../globals.css";
-import { notFound } from "next/navigation";
 import { AppFrame } from "@/components/AppFrame";
 import { createRootLayoutMetadata } from "@/lib/metadata";
-import { PUBLIC_LOCALES, isPublicLocale } from "@/lib/locale";
-
-async function resolveLocale(paramsPromise: Promise<unknown>) {
-  const params = (await paramsPromise) as { locale?: string };
-  const locale = params.locale;
-
-  if (!locale || !isPublicLocale(locale)) {
-    notFound();
-  }
-
-  return locale;
-}
+import { PUBLIC_LOCALES } from "@/lib/locale";
+import { requirePublicLocale } from "@/lib/publicLocaleRouting";
 
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<unknown>;
+  params: Promise<{ locale: string }>;
 }) {
-  const locale = await resolveLocale(params);
+  const locale = requirePublicLocale((await params).locale);
   return createRootLayoutMetadata(locale);
 }
 
@@ -33,9 +22,9 @@ export default async function SiteLayout({
   params,
 }: Readonly<{
   children: React.ReactNode;
-  params: Promise<unknown>;
+  params: Promise<{ locale: string }>;
 }>) {
-  const locale = await resolveLocale(params);
+  const locale = requirePublicLocale((await params).locale);
 
   return (
     <html lang={locale} suppressHydrationWarning>

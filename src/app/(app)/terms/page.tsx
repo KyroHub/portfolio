@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
-import { redirect } from "next/navigation";
 import { getTermsPath } from "@/lib/locale";
 import { createNoIndexMetadata } from "@/lib/metadata";
-import { getPreferredLanguage } from "@/lib/server/preferredLanguage";
+import { redirectToPreferredLocale } from "@/lib/publicLocaleRouting";
 
 export const metadata: Metadata = createNoIndexMetadata({
   title: "Terms Redirect",
@@ -10,6 +9,5 @@ export const metadata: Metadata = createNoIndexMetadata({
 });
 
 export default async function LegacyTermsRedirectPage() {
-  const preferredLanguage = await getPreferredLanguage();
-  redirect(getTermsPath(preferredLanguage));
+  return redirectToPreferredLocale(getTermsPath);
 }

@@ -4,7 +4,8 @@ import GrammarHubPageClient from "@/features/grammar/components/GrammarHubPageCl
 import { listGrammarLessons } from "@/features/grammar/lib/grammarDataset";
 import { getTranslation } from "@/lib/i18n";
 import { createLocalizedPageMetadata } from "@/lib/metadata";
-import { getGrammarPath, getLocalizedHomePath, isPublicLocale } from "@/lib/locale";
+import { getGrammarPath, getLocalizedHomePath } from "@/lib/locale";
+import { resolvePublicLocale } from "@/lib/publicLocaleRouting";
 import {
   createBreadcrumbStructuredData,
   createGrammarHubStructuredData,
@@ -22,7 +23,7 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  const resolvedLocale = isPublicLocale(locale) ? locale : "en";
+  const resolvedLocale = resolvePublicLocale(locale);
 
   return createLocalizedPageMetadata({
     title:
@@ -41,7 +42,7 @@ export default async function GrammarPage({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  const resolvedLocale = isPublicLocale(locale) ? locale : "en";
+  const resolvedLocale = resolvePublicLocale(locale);
   const lessons = listGrammarLessons();
 
   return (

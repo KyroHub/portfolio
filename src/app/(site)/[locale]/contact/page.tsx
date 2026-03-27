@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import ContactPageClient from "@/features/contact/components/ContactPageClient";
 import { createLocalizedPageMetadata } from "@/lib/metadata";
-import { isPublicLocale } from "@/lib/locale";
+import { resolvePublicLocale } from "@/lib/publicLocaleRouting";
 
 function buildContactDescription(locale: "en" | "nl") {
   return locale === "nl"
@@ -15,7 +15,7 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  const resolvedLocale = isPublicLocale(locale) ? locale : "en";
+  const resolvedLocale = resolvePublicLocale(locale);
 
   return createLocalizedPageMetadata({
     title: resolvedLocale === "nl" ? "Contact" : "Contact",

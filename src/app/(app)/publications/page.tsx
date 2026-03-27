@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
-import { redirect } from "next/navigation";
 import { getPublicationsPath } from "@/lib/locale";
 import { createNoIndexMetadata } from "@/lib/metadata";
-import { getPreferredLanguage } from "@/lib/server/preferredLanguage";
+import { redirectToPreferredLocale } from "@/lib/publicLocaleRouting";
 
 export const metadata: Metadata = createNoIndexMetadata({
   title: "Publications Redirect",
@@ -10,6 +9,5 @@ export const metadata: Metadata = createNoIndexMetadata({
 });
 
 export default async function LegacyPublicationsRedirectPage() {
-  const preferredLanguage = await getPreferredLanguage();
-  redirect(getPublicationsPath(preferredLanguage));
+  return redirectToPreferredLocale(getPublicationsPath);
 }

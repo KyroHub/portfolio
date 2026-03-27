@@ -1,11 +1,11 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
-import { stripLocaleFromPathname } from "@/lib/locale";
 import {
   getAuthUnavailableLoginPath,
   getLoginPath,
   getSupabaseRuntimeEnv,
 } from '@/lib/supabase/config'
+import { requiresAuthSessionProxy } from "@/lib/supabase/proxyRoutes";
 import type { Database } from '@/types/supabase'
 
 export async function updateSession(request: NextRequest) {
@@ -13,24 +13,18 @@ export async function updateSession(request: NextRequest) {
     request,
   })
   const { pathname } = request.nextUrl
-  const normalizedPathname = stripLocaleFromPathname(pathname)
-  const protectedRoutes = ['/dashboard', '/admin']
-  const isProtectedRoute = protectedRoutes.some(
-    (route) =>
-      normalizedPathname === route ||
-      normalizedPathname.startsWith(`${route}/`),
-  )
+  const requiresAuthSession = requiresAuthSessionProxy(pathname)
+
+  if (!requiresAuthSession) {
+    return supabaseResponse
+  }
 
   const env = getSupabaseRuntimeEnv()
 
   // Public pages should stay reachable even if auth is not configured, while
   // private routes still redirect to a login page that explains the issue.
   if (!env) {
-    if (isProtectedRoute) {
-      return NextResponse.redirect(new URL(getAuthUnavailableLoginPath(pathname), request.url))
-    }
-
-    return supabaseResponse
+    return NextResponse.redirect(new URL(getAuthUnavailableLoginPath(pathname), request.url))
   }
 
   const supabase = createServerClient<Database>(
@@ -60,7 +54,7 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser()
 
-  if (isProtectedRoute && !user) {
+  if (!user) {
     return NextResponse.redirect(new URL(getLoginPath(pathname), request.url))
   }
 

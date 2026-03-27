@@ -19,10 +19,10 @@ import {
   getEntryPath,
   getLocalizedHomePath,
   getOpenGraphLocale,
-  isPublicLocale,
 } from '@/lib/locale';
 import { getTranslation } from '@/lib/i18n';
 import { buildPageTitle, siteConfig } from '@/lib/site';
+import { resolvePublicLocale } from '@/lib/publicLocaleRouting';
 import {
   createBreadcrumbStructuredData,
   createDefinedTermStructuredData,
@@ -38,9 +38,7 @@ export async function generateMetadata({
   params: Promise<{ locale: string; id: string }>;
 }): Promise<Metadata> {
   const resolvedParams = await params;
-  const locale = isPublicLocale(resolvedParams.locale)
-    ? resolvedParams.locale
-    : "en";
+  const locale = resolvePublicLocale(resolvedParams.locale);
   const dictionary = getDictionary();
   const entry = dictionary.find((item) => item.id === resolvedParams.id);
 
@@ -89,9 +87,7 @@ export default async function EntryPage({
   params: Promise<{ locale: string; id: string }>;
 }) {
   const resolvedParams = await params;
-  const locale = isPublicLocale(resolvedParams.locale)
-    ? resolvedParams.locale
-    : "en";
+  const locale = resolvePublicLocale(resolvedParams.locale);
   const dictionary = getDictionary();
   const entry = dictionary.find(e => e.id === resolvedParams.id);
 
@@ -128,7 +124,6 @@ export default async function EntryPage({
 
       <EntryPageHeader entryLabel={headword} />
       <EntryPageClient
-        entryId={entry.id}
         initialEntry={entry}
         initialParentEntry={parentEntry}
         initialRelatedEntries={relatedEntries}

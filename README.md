@@ -5,27 +5,30 @@
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-06B6D4?logo=tailwindcss&logoColor=white)
 ![API](https://img.shields.io/badge/Public_Grammar_API-Live-0ea5e9)
 
-Digital Coptic language platform by Kyrillos Wannes, bringing together a searchable dictionary, published grammar lessons, academic publications, and a public grammar API.
+Digital Coptic language platform by Kyrillos Wannes, bringing together a searchable dictionary, published grammar lessons, academic publications, a public grammar API, and private learning workspaces for students and instructors.
 
 > Live site: [kyrilloswannes.com](https://kyrilloswannes.com)
 >
 > Repository: [github.com/KyroHub/portfolio](https://github.com/KyroHub/portfolio)
 
-## What the Site Includes
+## What the App Includes
 
-- A searchable Coptic dictionary with 3,342 entries and support for Coptic, English, and Greek lookup.
-- Published grammar lessons with exercises, endnotes, concept glossaries, and links back to dictionary entries and sources.
+- A searchable Coptic dictionary with 6,408 checked-in entries and support for Coptic, English, and Greek lookup.
+- Published grammar lessons with exercises, footnotes, concept glossaries, and links back to dictionary entries and sources.
 - A publications section for published and forthcoming books connected to the broader Coptic project.
 - A public grammar API with JSON endpoints and OpenAPI documentation for reuse in other tools and teaching workflows.
-- English and Dutch interfaces for broader classroom and research accessibility.
+- A private student dashboard for profile settings, grammar progress, bookmarks, notes, and exercise submissions.
+- A private instructor workspace for reviewing and grading student submissions.
+- English and Dutch interfaces, with legacy non-localized routes redirecting to localized pages.
 
 ## Highlights
 
 - Fast lexical browsing with support for Coptic script and a built-in virtual keyboard.
 - Rich entry pages with grammatical detail, dialect forms, and related content.
-- Grammar lessons that connect terminology, examples, sources, and dictionary entries in one reading flow.
-- Publication pages that tie research output back into the teaching and reference material.
-- Developer-facing grammar endpoints for lessons, concepts, examples, exercises, footnotes, and sources.
+- Grammar lessons that connect terminology, examples, sources, learner progress, and dictionary entries in one reading flow.
+- A versioned grammar dataset exported to `public/data/grammar/v1` and shared by the site, API, and developer docs.
+- Private learner and instructor flows built around submissions, feedback, bookmarks, notes, and profile management.
+- Developer-facing grammar endpoints and docs for lessons, concepts, examples, exercises, footnotes, sources, and the OpenAPI spec.
 
 ## Interface Preview
 
@@ -42,11 +45,13 @@ Digital Coptic language platform by Kyrillos Wannes, bringing together a searcha
 ## Stack
 
 - Framework: Next.js 16 with the App Router
-- Language: TypeScript
-- UI: React 19 + Tailwind CSS 4
+- Language and UI: TypeScript, React 19, Tailwind CSS 4
+- Auth and storage: Supabase SSR, Postgres, and Storage
 - Charts and analytics: Recharts
 - Theme support: `next-themes`
-- Data delivery: static JSON generated from typed source data and transformation scripts
+- API docs: OpenAPI + Swagger UI
+- Testing: Vitest + Playwright
+- Data delivery: checked-in JSON in `public/data`, with grammar exports generated from typed source modules in `src/content/grammar`
 
 ## Runtime Assumptions
 
@@ -77,7 +82,7 @@ npx playwright install chromium
 
 ### Environment Setup
 
-Copy the example file only if you want to enable Supabase auth, contact email, or distributed rate limiting locally:
+Copy the example file only if you want to enable Supabase auth, profile avatars, contact email, or distributed rate limiting locally:
 
 ```bash
 cp .env.example .env.local
@@ -89,13 +94,14 @@ Important:
 
 - `.env.local` is gitignored and should never be committed.
 - [`.env.example`](./.env.example) contains placeholders only and is safe to track.
-- If you skip environment setup, public pages still work, but auth and email-backed features may be unavailable.
+- If you skip environment setup, public pages and the read-only grammar API still work, but auth, dashboards, avatar uploads, instructor review, and email-backed features may be unavailable.
 
 Useful commands:
 
 ```bash
 npm run lint
 npm run test
+npm run data:grammar:export
 npm run test:e2e:local
 npm run build
 ```
@@ -104,13 +110,17 @@ npm run build
 
 ### Grammar
 
-Grammar lesson data is exported into public JSON files used by the site and API.
+Grammar lesson source files live under `src/content/grammar`. They are exported into public JSON files used by the site and API.
 
 ```bash
 npm run data:grammar:export
 ```
 
-This export also runs automatically before production builds.
+The export writes to `public/data/grammar/v1` and also runs automatically before production builds.
+
+### Dictionary
+
+The public dictionary currently ships from the checked-in dataset at `public/data/dictionary.json`.
 
 ## Public Grammar API
 
@@ -130,24 +140,28 @@ Key entry points:
 Docs and developer pages:
 
 - `/api-docs`
+- `/api/openapi.json`
 - `/en/developers`
 - `/nl/developers`
 
 ## Project Status
 
-Currently live in production:
+Currently implemented in the app:
 
 - Searchable Coptic dictionary
 - Published grammar lesson system
 - Publications section
 - Public grammar API and API docs
 - English and Dutch localized UI
+- Student dashboard with profile and learning progress
+- Instructor submission review workspace
 
-Current areas of growth:
+Current areas of active maintenance:
 
 - More published grammar lessons
 - Expanded publication metadata and coverage
-- Submission and editorial workflows
+- Editorial and lexical data cleanup
+- Submission and review workflow polish
 - Further polish for contributor and developer documentation
 
 ## Contributing
@@ -161,4 +175,5 @@ If you want to propose a correction or addition, start with [CONTRIBUTING.md](./
 This repository uses a split licensing model:
 
 - Source code: [MIT License](./LICENSE)
-- Dictionary data: please preserve scholarly attribution when reusing or adapting lexical material
+- Grammar lesson content and dataset exports: all rights reserved unless stated otherwise in dataset rights metadata
+- Dictionary data and publication metadata: please preserve scholarly attribution and source context when reusing or adapting material

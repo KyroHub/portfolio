@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
-import { redirect } from "next/navigation";
 import { getLocalizedHomePath } from "@/lib/locale";
 import { createNoIndexMetadata } from "@/lib/metadata";
-import { getPreferredLanguage } from "@/lib/server/preferredLanguage";
+import { redirectToPreferredLocale } from "@/lib/publicLocaleRouting";
 
 export const metadata: Metadata = createNoIndexMetadata({
   title: "Home Redirect",
@@ -10,6 +9,5 @@ export const metadata: Metadata = createNoIndexMetadata({
 });
 
 export default async function LegacyHomeRedirectPage() {
-  const preferredLanguage = await getPreferredLanguage();
-  redirect(getLocalizedHomePath(preferredLanguage));
+  return redirectToPreferredLocale(getLocalizedHomePath);
 }

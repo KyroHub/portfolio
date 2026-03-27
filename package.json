@@ -5,6 +5,9 @@
   "private": true,
   "author": "Kyrillos Wannes",
   "license": "MIT",
+  "engines": {
+    "node": ">=22.13.0 <23"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/KyroHub/portfolio.git"
@@ -28,7 +31,7 @@
     "prebuild": "npm run data:grammar:export",
     "build": "next build --webpack",
     "start": "next start",
-    "data:grammar:export": "node --experimental-strip-types scripts/exportGrammar.mts",
+    "data:grammar:export": "node --experimental-default-type=module --experimental-strip-types scripts/exportGrammar.mts",
     "lint": "eslint",
     "test": "vitest run",
     "test:e2e": "playwright test",

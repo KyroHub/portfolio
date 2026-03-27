@@ -16,7 +16,7 @@ import {
   isLanguage,
   type TranslationKey,
 } from "@/lib/i18n";
-import { switchLocalePath } from "@/lib/locale";
+import { appendSearchAndHash, switchLocalePath } from "@/lib/locale";
 import type { Language } from "@/types/i18n";
 
 interface LanguageContextType {
@@ -83,11 +83,9 @@ export function LanguageProvider({
 
     if (localeRouting && pathname) {
       const nextPath = switchLocalePath(pathname, lang);
-      const nextQuery =
-        typeof window === "undefined"
-          ? ""
-          : new URLSearchParams(window.location.search).toString();
-      router.push(nextQuery ? `${nextPath}?${nextQuery}` : nextPath);
+      const nextSearch = typeof window === "undefined" ? "" : window.location.search;
+      const nextHash = typeof window === "undefined" ? "" : window.location.hash;
+      router.push(appendSearchAndHash(nextPath, nextSearch, nextHash));
     }
   };
 
