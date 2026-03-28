@@ -321,6 +321,9 @@ export function EntryActionBar({
 }: EntryActionBarProps) {
   const { language, t } = useLanguage();
   const authGate = useOptionalAuthGate();
+  const [activeLockedAction, setActiveLockedAction] = useState<
+    "favorite" | "report" | null
+  >(null);
   const [isShareOpen, setIsShareOpen] = useState(false);
   const [shareNotice, setShareNotice] = useState<ActionNotice>(null);
   const [isReportOpen, setIsReportOpen] = useState(false);
@@ -356,6 +359,19 @@ export function EntryActionBar({
   });
   const shareLinks = buildEntryShareLinks(sharePayload);
   const sharePanelId = `entry-share-panel-${entry.id}`;
+
+  function handleLockedActionOpenChange(
+    action: "favorite" | "report",
+    visible: boolean,
+  ) {
+    setActiveLockedAction((current) => {
+      if (visible) {
+        return action;
+      }
+
+      return current === action ? null : current;
+    });
+  }
 
   async function writeToClipboard(value: string, successMessage: string) {
     if (typeof navigator === "undefined" || !navigator.clipboard) {
@@ -430,6 +446,7 @@ export function EntryActionBar({
                 "border-sky-200 bg-sky-50 text-sky-700 hover:bg-sky-100 hover:text-sky-800 dark:border-sky-900/50 dark:bg-sky-950/25 dark:text-sky-300 dark:hover:bg-sky-950/40",
             )}
             onClick={() => {
+              setActiveLockedAction(null);
               setReportNotice(null);
               setShareNotice(null);
               setIsReportOpen(false);
@@ -452,8 +469,13 @@ export function EntryActionBar({
             disabled={isLoading || isPending}
             isAuthenticated={authGate.isAuthenticated}
             isReady={authGate.isReady}
+            lockedOpen={activeLockedAction === "favorite"}
             lockedMessage={lockedMessage}
+            onLockedOpenChange={(visible) =>
+              handleLockedActionOpenChange("favorite", visible)
+            }
             onClick={() => {
+              setActiveLockedAction(null);
               setReportNotice(null);
               setShareNotice(null);
               void toggleFavorite();
@@ -483,8 +505,13 @@ export function EntryActionBar({
             )}
             isAuthenticated={authGate.isAuthenticated}
             isReady={authGate.isReady}
+            lockedOpen={activeLockedAction === "report"}
             lockedMessage={lockedMessage}
+            onLockedOpenChange={(visible) =>
+              handleLockedActionOpenChange("report", visible)
+            }
             onClick={() => {
+              setActiveLockedAction(null);
               setShareNotice(null);
               setReportNotice(null);
               setIsShareOpen(false);

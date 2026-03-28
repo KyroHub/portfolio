@@ -42,31 +42,50 @@ test("signed-out desktop users can hover locked dictionary entry actions to reve
 
   await saveButton.hover();
   await expect(lockedPrompt).toBeVisible();
+
+  await reportButton.hover();
+  await expect(lockedPrompt).toBeVisible();
+  await expect(
+    page.locator('[role="tooltip"]').filter({ hasText: LOCKED_ENTRY_PROMPT_PATTERN }),
+  ).toHaveCount(1);
 });
 
-test("signed-out mobile users can tap locked dictionary entry actions to reveal the login prompt", async ({
-  page,
-}) => {
-  await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto(ENTRY_PATH);
+test.describe("signed-out mobile dictionary entry actions", () => {
+  test.use({
+    hasTouch: true,
+    isMobile: true,
+    viewport: { width: 390, height: 844 },
+  });
 
-  const saveButton = page.getByRole("button", { name: "Save entry" });
-  const reportButton = page.getByRole("button", { name: "Report entry" });
-  const lockedPrompt = page
-    .locator('[role="tooltip"]')
-    .filter({ hasText: LOCKED_ENTRY_PROMPT_PATTERN })
-    .first();
+  test("signed-out mobile users can tap locked dictionary entry actions to reveal the login prompt", async ({
+    page,
+  }) => {
+    await page.goto(ENTRY_PATH);
 
-  await expect(saveButton).toBeEnabled();
-  await expect(reportButton).toBeEnabled();
-  await expect(saveButton).toHaveAttribute("data-locked", "true");
-  await expect(reportButton).toHaveAttribute("data-locked", "true");
+    const saveButton = page.getByRole("button", { name: "Save entry" });
+    const reportButton = page.getByRole("button", { name: "Report entry" });
+    const lockedPrompt = page
+      .locator('[role="tooltip"]')
+      .filter({ hasText: LOCKED_ENTRY_PROMPT_PATTERN })
+      .first();
 
-  await saveButton.click();
-  await expect(lockedPrompt).toBeVisible();
+    await expect(saveButton).toBeEnabled();
+    await expect(reportButton).toBeEnabled();
+    await expect(saveButton).toHaveAttribute("data-locked", "true");
+    await expect(reportButton).toHaveAttribute("data-locked", "true");
 
-  await reportButton.click();
-  await expect(lockedPrompt).toBeVisible();
+    await saveButton.tap();
+    await expect(lockedPrompt).toBeVisible();
+
+    await page.waitForTimeout(120);
+    await saveButton.tap();
+
+    await reportButton.tap();
+    await expect(lockedPrompt).toBeVisible();
+    await expect(
+      page.locator('[role="tooltip"]').filter({ hasText: LOCKED_ENTRY_PROMPT_PATTERN }),
+    ).toHaveCount(1);
+  });
 });
 
 test.describe("signed-in dictionary entry actions", () => {
